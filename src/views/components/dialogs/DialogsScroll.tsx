@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions'
 import Dialog, { DialogProps } from '@mui/material/Dialog'
 import DialogContentText from '@mui/material/DialogContentText'
 
-export const DialogsScroll = () => {
+const DialogsScroll = () => {
   // ** States
   const [open, setOpen] = useState<boolean>(false)
   const [scroll, setScroll] = useState<DialogProps['scroll']>('paper')

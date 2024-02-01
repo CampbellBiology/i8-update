@@ -34,53 +34,7 @@ export type OptionType = string | OptionDividerType | OptionMenuItemType
 
 export type OptionsMenuType = {
   icon?: ReactNode
-  options?: OptionType[]
-  leftAlignMenu?: boolean
-  iconButtonProps?: IconButtonProps
-  iconProps?: Omit<IconProps, 'icon'>
-  menuProps?: Omit<MenuProps, 'open'>
-  id?: string
-  isMain?: boolean
-  isFavorite?: boolean
-}
-
-export type OptionsMenuTypeFavorite = {
-  icon?: ReactNode
-  options?: OptionType[]
-  leftAlignMenu?: boolean
-  iconButtonProps?: IconButtonProps
-  iconProps?: Omit<IconProps, 'icon'>
-  menuProps?: Omit<MenuProps, 'open'>
-  id: string
-  isMain: boolean
-  isFavorite?: boolean
-}
-
-export type OptionsMenuTypeHidden = {
-  icon?: ReactNode
-  options?: OptionType[]
-  leftAlignMenu?: boolean
-  iconButtonProps?: IconButtonProps
-  iconProps?: Omit<IconProps, 'icon'>
-  menuProps?: Omit<MenuProps, 'open'>
-  id: string
-}
-
-export type OptionsMenuTypeList = {
-  icon?: ReactNode
-  options?: OptionType[]
-  leftAlignMenu?: boolean
-  iconButtonProps?: IconButtonProps
-  iconProps?: Omit<IconProps, 'icon'>
-  menuProps?: Omit<MenuProps, 'open'>
-  id: string
-  isMain: boolean
-  isFavorite?: boolean
-}
-
-export type OptionsMenuTypeRealTimeLeft = {
-  icon?: ReactNode
-  options?: OptionType[]
+  options: OptionType[]
   leftAlignMenu?: boolean
   iconButtonProps?: IconButtonProps
   iconProps?: Omit<IconProps, 'icon'>

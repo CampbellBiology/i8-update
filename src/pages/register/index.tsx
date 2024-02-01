@@ -1,372 +1,294 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import Image from 'next/image'
+// ** React Imports
+import { ReactNode, useState } from 'react'
 
-// flowbite
-import { Tooltip as TooltipFlowbite } from 'flowbite-react'
-import { Box, Button, Card, CardContent, CardHeader, Grid, TextField } from '@mui/material'
-import SearchAddress from './SearchAddress'
-import 'tailwindcss/tailwind.css'
+// ** Next Import
+import Link from 'next/link'
 
-interface Device {
-  address: string
-  product_serial_number: string
-  cluster: string
-  location: string
-  location_image?: string
-}
+// ** MUI Components
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Checkbox from '@mui/material/Checkbox'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
+import IconButton from '@mui/material/IconButton'
+import Box, { BoxProps } from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import { styled, useTheme } from '@mui/material/styles'
+import InputAdornment from '@mui/material/InputAdornment'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Typography, { TypographyProps } from '@mui/material/Typography'
 
-export default function RegisterPage() {
-  const [addressOpen, setAddressOpen] = useState<boolean>(false) // 주소검색 오픈
-  const [addressDetail, setAddressDetail] = useState<string>('') // 자세한 주소 입력칸
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
-  const [inputProductSerialNumber, setInputProductSerialNumber] = useState<string>('')
-  const [inputCluster, setInputCluster] = useState<string>('')
-  const [inputStatusMessage, setInputStatusMessage] = useState<string>('')
-  const [inputLocation, setInputLocation] = useState<string>('')
+// ** Configs
+import themeConfig from 'src/configs/themeConfig'
 
-  const [device, setDevice] = useState<Array<Device>>([])
+// ** Layout Import
+import BlankLayout from 'src/@core/layouts/BlankLayout'
 
-  const [image, setImage] = useState<File | null>(null)
+// ** Hooks
+import { useSettings } from 'src/@core/hooks/useSettings'
 
-  const [clusterList, setClusterList] = useState<Array<string>>([])
-  const [addressList, setAddressList] = useState<Array<string>>([])
+// ** Demo Imports
+import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
-  //장소 이미지용 240115
-  // const [locationImage, setLocationImage] = useState<string>("");
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedImage: File = e.target.files[0]
-    setImage(selectedImage)
+// ** Styled Components
+const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: theme.spacing(20),
+  paddingRight: '0 !important',
+  [theme.breakpoints.down('lg')]: {
+    padding: theme.spacing(10)
   }
+}))
 
-  const getDeviceInfo = async () => {
-    console.log('get device info')
-
-    const data = {}
-    await axios
-      .get('/api/device', {
-        withCredentials: true
-      })
-      .then(response => {
-        let res = response.data
-        if (res.status === 'success') {
-          setDevice(res.data)
-          console.log(res.data)
-        } else {
-          console.log('fail')
-        }
-      })
+const RegisterIllustration = styled('img')(({ theme }) => ({
+  maxWidth: '46rem',
+  [theme.breakpoints.down('lg')]: {
+    maxWidth: '35rem'
   }
+}))
 
-  //장소 이미지용 240115
-  // const getDeviceImage= async () => {
-  //     await axios.get("/api/device/imageAll", {
-  //         withCredentials: true,
-  //     })
-  //         .then((response) => {
-  //             let res = response.data;
-  //             if (res.status === "success") {
-  //                 setLocationImage(res.data);
-  //                 console.log(locationImage)
-  //                 console.log(res.data)
-  //             }
-  //             else {
-  //                 console.log("fail");
-  //             }
-  //         })
-  // }
-
-  const registerAddress = async () => {
-    await axios
-      .post(
-        '/api/device/register',
-        {
-          product_serial_number: inputProductSerialNumber,
-          address: addressDetail,
-          cluster: inputCluster,
-          location: inputLocation
-        },
-        {
-          withCredentials: true
-        }
-      )
-      .then(response => {
-        let res = response.data
-        if (res.status === 'success') {
-          // setDevice(res.data);
-          console.log(res.data)
-          setInputStatusMessage('기기 등록이 완료되었습니다.')
-        } else {
-          console.log('fail')
-        }
-      })
-
-    const formData = new FormData()
-
-    formData.append('image', image)
-    formData.append('product_serial_number', inputProductSerialNumber)
-    formData.append('cluster', inputCluster)
-    formData.append('location', inputLocation)
-
-    let config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      transformRequest: (formData: any) => formData
-    }
-
-    await axios.post('/api/device/image/register', formData, config).then(response => {
-      let res = response.data
-
-      if (res.status === 'success') {
-        setInputStatusMessage('기기 등록이 완료되었습니다.')
-      } else {
-        console.log('fail')
-      }
-    })
-    // console.log("getDeviceInfo")
-    getDeviceInfo()
+const TreeIllustration = styled('img')(({ theme }) => ({
+  bottom: 0,
+  left: '1.875rem',
+  position: 'absolute',
+  [theme.breakpoints.down('lg')]: {
+    left: 0
   }
+}))
 
-  const [snStatus, setSnStatus] = useState<boolean>(false)
-  const registerAddressFunc = () => {
-    // let snStatus = false;
-
-    device.map((item: Device) => {
-      if (item.product_serial_number === inputProductSerialNumber) {
-        setSnStatus(true)
-        // snStatus = true;
-      }
-    })
-
-    if (inputProductSerialNumber === '') {
-      setInputStatusMessage('시리얼 넘버를 입력해주세요.')
-    } else if (inputCluster === '') {
-      setInputStatusMessage('그룹명을 입력해주세요.')
-    } else if (addressDetail === '') {
-      setInputStatusMessage('위치를 입력해주세요.')
-    } else if (inputLocation === '') {
-      setInputStatusMessage('장소명을 입력해주세요.')
-    } else if (!image) {
-      setInputStatusMessage('이미지를 등록해주세요.')
-    } else if (snStatus === true) {
-      // else if (!snStatus) {
-      setInputStatusMessage('시리얼 넘버를 다시 확인해 주세요.')
-    } else {
-      registerAddress()
-    }
+const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: 450
   }
+}))
 
-  useEffect(() => {
-    getDeviceInfo()
-  }, [addressDetail])
-
-  useEffect(() => {
-    const addresses: string[] = []
-    //중복 제거
-    device.map(el => {
-      if (!addresses.includes(el.address)) addresses.push(el.address)
-    })
-    setAddressList(addresses)
-
-    const clusters: string[] = []
-
-    device.map(el => {
-      if (!clusters.includes(el.cluster)) clusters.push(el.cluster)
-    })
-
-    setClusterList(clusters)
-  }, [device])
-
-  console.log(clusterList)
-
-  const deleteDevice = async product_serial_number => {
-    console.log()
-
-    await axios
-      .post('/api/device/delete', {
-        product_serial_number: product_serial_number
-      })
-      .then(res => {
-        const status = res.data.status
-        console.log(res.data)
-        if (status === 'success') {
-          // const data = res.data.data;
-          // console.log(data)
-          // setDeviceDataByClusterKey(data);
-        } else {
-          console.log('ERROR')
-        }
-      })
-
-    await axios
-      .post('/api/device/delete/image', {
-        product_serial_number: product_serial_number
-      })
-      .then(res => {
-        const status = res.data.status
-        console.log(res.data)
-        if (status === 'success') {
-          // const data = res.data.data;
-          // console.log(data)
-          // setDeviceDataByClusterKey(data);
-        } else {
-          console.log('ERROR')
-        }
-      })
-
-    await getDeviceInfo()
+const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  [theme.breakpoints.down('xl')]: {
+    width: '100%'
+  },
+  [theme.breakpoints.down('md')]: {
+    maxWidth: 400
   }
+}))
+
+const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontWeight: 600,
+  marginBottom: theme.spacing(1.5),
+  [theme.breakpoints.down('md')]: { mt: theme.spacing(8) }
+}))
+
+const LinkStyled = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
+
+const Register = () => {
+  // ** States
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+
+  // ** Hooks
+  const theme = useTheme()
+  const { settings } = useSettings()
+  const hidden = useMediaQuery(theme.breakpoints.down('md'))
+
+  // ** Vars
+  const { skin } = settings
+
+  const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
 
   return (
-    <Grid sx={{ display: 'flex' }}>
-      <Card sx={{ width: '50%', m: 5, minWidth: '500px' }}>
-        <CardHeader title='기기 등록'></CardHeader>
-        <CardContent sx={{ width: '350px' }}>
-          <CardContent>
-            <TextField
-              fullWidth
-              multiline
-              variant='standard'
-              id='textarea-standard'
-              placeholder='S/N'
-              label='S/N'
-              onChange={event => setInputProductSerialNumber(event.target.value)}
+    <Box className='content-right'>
+      {!hidden ? (
+        <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
+          <RegisterIllustrationWrapper>
+            <RegisterIllustration
+              alt='register-illustration'
+              src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
             />
-          </CardContent>
-          <CardContent>
-            <TextField
-              fullWidth
-              multiline
-              variant='standard'
-              id='textarea-standard'
-              placeholder='그룹명'
-              label='그룹명'
-              onChange={event => setInputCluster(event.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <TextField
-              fullWidth
-              multiline
-              variant='standard'
-              id='textarea-standard'
-              placeholder='장소명'
-              label='장소명'
-              onChange={event => setInputLocation(event.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            {/* input : image */}
-            <Box sx={{ mt: 5 }}>
-              <div className='mr-3 my-2'>장소 이미지 업로드</div>
-              <div>
-                <input type='file' onChange={handleImageChange} />
-                {image && <img src={URL.createObjectURL(image)} alt='preview' />}
-              </div>
+          </RegisterIllustrationWrapper>
+          <FooterIllustrationsV2 image={<TreeIllustration alt='tree' src='/images/pages/tree-2.png' />} />
+        </Box>
+      ) : null}
+      <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
+        <Box
+          sx={{
+            p: 12,
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'background.paper'
+          }}
+        >
+          <BoxWrapper>
+            <Box
+              sx={{
+                top: 30,
+                left: 40,
+                display: 'flex',
+                position: 'absolute',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <svg
+                width={35}
+                height={29}
+                version='1.1'
+                viewBox='0 0 30 23'
+                xmlns='http://www.w3.org/2000/svg'
+                xmlnsXlink='http://www.w3.org/1999/xlink'
+              >
+                <g stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
+                  <g id='Artboard' transform='translate(-95.000000, -51.000000)'>
+                    <g id='logo' transform='translate(95.000000, 50.000000)'>
+                      <path
+                        id='Combined-Shape'
+                        fill={theme.palette.primary.main}
+                        d='M30,21.3918362 C30,21.7535219 29.9019196,22.1084381 29.7162004,22.4188007 C29.1490236,23.366632 27.9208668,23.6752135 26.9730355,23.1080366 L26.9730355,23.1080366 L23.714971,21.1584295 C23.1114106,20.7972624 22.7419355,20.1455972 22.7419355,19.4422291 L22.7419355,19.4422291 L22.741,12.7425689 L15,17.1774194 L7.258,12.7425689 L7.25806452,19.4422291 C7.25806452,20.1455972 6.88858935,20.7972624 6.28502902,21.1584295 L3.0269645,23.1080366 C2.07913318,23.6752135 0.850976404,23.366632 0.283799571,22.4188007 C0.0980803893,22.1084381 2.0190442e-15,21.7535219 0,21.3918362 L0,3.58469444 L0.00548573643,3.43543209 L0.00548573643,3.43543209 L0,3.5715689 C3.0881846e-16,2.4669994 0.8954305,1.5715689 2,1.5715689 C2.36889529,1.5715689 2.73060353,1.67359571 3.04512412,1.86636639 L15,9.19354839 L26.9548759,1.86636639 C27.2693965,1.67359571 27.6311047,1.5715689 28,1.5715689 C29.1045695,1.5715689 30,2.4669994 30,3.5715689 L30,3.5715689 Z'
+                      />
+                      <polygon
+                        id='Rectangle'
+                        opacity='0.077704'
+                        fill={theme.palette.common.black}
+                        points='0 8.58870968 7.25806452 12.7505183 7.25806452 16.8305646'
+                      />
+                      <polygon
+                        id='Rectangle'
+                        opacity='0.077704'
+                        fill={theme.palette.common.black}
+                        points='0 8.58870968 7.25806452 12.6445567 7.25806452 15.1370162'
+                      />
+                      <polygon
+                        id='Rectangle'
+                        opacity='0.077704'
+                        fill={theme.palette.common.black}
+                        points='22.7419355 8.58870968 30 12.7417372 30 16.9537453'
+                        transform='translate(26.370968, 12.771227) scale(-1, 1) translate(-26.370968, -12.771227) '
+                      />
+                      <polygon
+                        id='Rectangle'
+                        opacity='0.077704'
+                        fill={theme.palette.common.black}
+                        points='22.7419355 8.58870968 30 12.6409734 30 15.2601969'
+                        transform='translate(26.370968, 11.924453) scale(-1, 1) translate(-26.370968, -11.924453) '
+                      />
+                      <path
+                        id='Rectangle'
+                        fillOpacity='0.15'
+                        fill={theme.palette.common.white}
+                        d='M3.04512412,1.86636639 L15,9.19354839 L15,9.19354839 L15,17.1774194 L0,8.58649679 L0,3.5715689 C3.0881846e-16,2.4669994 0.8954305,1.5715689 2,1.5715689 C2.36889529,1.5715689 2.73060353,1.67359571 3.04512412,1.86636639 Z'
+                      />
+                      <path
+                        id='Rectangle'
+                        fillOpacity='0.35'
+                        fill={theme.palette.common.white}
+                        transform='translate(22.500000, 8.588710) scale(-1, 1) translate(-22.500000, -8.588710) '
+                        d='M18.0451241,1.86636639 L30,9.19354839 L30,9.19354839 L30,17.1774194 L15,8.58649679 L15,3.5715689 C15,2.4669994 15.8954305,1.5715689 17,1.5715689 C17.3688953,1.5715689 17.7306035,1.67359571 18.0451241,1.86636639 Z'
+                      />
+                    </g>
+                  </g>
+                </g>
+              </svg>
+              <Typography
+                variant='h6'
+                sx={{
+                  ml: 3,
+                  lineHeight: 1,
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  fontSize: '1.5rem !important'
+                }}
+              >
+                {themeConfig.templateName}
+              </Typography>
             </Box>
-            <div className='text-blue-500 mb-3'>{inputStatusMessage}</div>
-          </CardContent>
-          <CardContent sx={{ mt: 5, display: 'flex', flexDirection: 'row', position: 'relative' }}>
-            <Box sx={{ width: '350px', float: 'left' }}>
-              <TextField
-                fullWidth
-                multiline
-                variant='standard'
-                id='textarea-standard'
-                placeholder='위치'
-                label='위치'
-                onChange={event => setInputLocation(event.target.value)}
-                value={addressDetail}
+            <Box sx={{ mb: 6 }}>
+              <TypographyStyled variant='h5'>Adventure starts here 🚀</TypographyStyled>
+              <Typography variant='body2'>Make your app management easy and fun!</Typography>
+            </Box>
+            <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
+              <TextField autoFocus fullWidth sx={{ mb: 4 }} label='Username' placeholder='johndoe' />
+              <TextField fullWidth label='Email' sx={{ mb: 4 }} placeholder='user@email.com' />
+              <FormControl fullWidth>
+                <InputLabel htmlFor='auth-login-v2-password'>Password</InputLabel>
+                <OutlinedInput
+                  label='Password'
+                  id='auth-login-v2-password'
+                  type={showPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+              <FormControlLabel
+                control={<Checkbox />}
+                sx={{ mb: 4, mt: 1.5, '& .MuiFormControlLabel-label': { fontSize: '0.875rem' } }}
+                label={
+                  <>
+                    <Typography variant='body2' component='span'>
+                      I agree to{' '}
+                    </Typography>
+                    <LinkStyled href='/' onClick={e => e.preventDefault()}>
+                      privacy policy & terms
+                    </LinkStyled>
+                  </>
+                }
               />
-            </Box>
-            {/* input : address */}
-
-            {/* <div className='flex justify-between items-center'>
-              <div>
-                <div className='mb-3'>위치</div>
-                <div className='flex'>
-                  <input type='text' disabled className='p-2 bg-white rounded-xl mr-3' value={addressDetail}></input> */}
-            <Box sx={{ position: 'absolute', left: '330px', width: '120px' }}>
-              <Button variant='outlined' onClick={() => setAddressOpen(true)}>
-                주소 검색
+              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
+                Sign up
               </Button>
-            </Box>
-
-            {/* </div>
-              </div> */}
-          </CardContent>
-
-          {/* </div> */}
-
-          <Box>
-            {addressOpen ? <SearchAddress setAddressDetail={setAddressDetail} setAddressOpen={setAddressOpen} /> : null}
-          </Box>
-        </CardContent>
-        <CardContent sx={{ mt: 10, display: 'flex', justifyContent: 'center' }}>
-          <Button variant='outlined' sx={{ width: '100px', height: '50px' }} onClick={() => registerAddressFunc()}>
-            등록
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* right */}
-      <Card sx={{ width: '50%', m: 5, minWidth: '500px', maxHeight: '800px', overflowY: 'auto' }}>
-        {/* <div className="flex flex-col justify-start m-5 p-5 bg-gray-200 w-1/2 max-md:w-full max-h-[1000px] min-w-[500px]"> */}
-
-        <CardHeader title='I8-SENSOR 목록'></CardHeader>
-        <CardContent>
-          {addressList?.map((item: Device) => {
-            return (
-              <Box key={item} style={{ marginBottom: '30px' }} sx={{ pl: -3 }}>
-                <CardHeader title={item ? item : '지정되지 않은 그룹명'} sx={{ ml: -3 }}></CardHeader>
-                <CardContent sx={{ ml: -3 }}>
-                  {device
-                    .filter(el => el.address === item)
-                    .map((item, index) => {
-                      return (
-                        <>
-                          {/* <Box>{item.cluster}</Box>
-                          {item.filter(el2 => el2.cluster )} */}
-                          <Card
-                            key={index}
-                            // className='border border-1 border-gray-500 rounded-xl p-4 bg-white mb-3'
-                            sx={{ position: 'relative', p: 5, m: 2, minWidth: '450px' }}
-                          >
-                            <div>
-                              <b>S/N</b> : {item.product_serial_number}
-                            </div>
-                            <div>
-                              <b>address</b> :{' '}
-                              {item.address ? item.address : '시리얼 넘버를 입력하고 주소를 등록해주세요.'}
-                            </div>
-                            <div>
-                              <b>cluster</b> : {item.cluster ? item.cluster : '그룹명을 등록해주세요.'}
-                            </div>
-                            <div>
-                              <b>location</b> : {item.location ? item.location : '장소명을 등록해주세요.'}
-                            </div>
-                            <div>
-                              <b>이미지:</b> {item.image_url ? '등록 완료' : '이미지을 등록해주세요.'}
-                            </div>
-                            {/* <Image src={ `data:image/png;base64,${item.image_url}`} alt="장소 이미지" width={20} height={10}></Image> */}
-
-                            <div style={{ position: 'absolute', right: '20px', top: '60px' }}>
-                              <Button variant='outlined' onClick={() => deleteDevice(item.product_serial_number)}>
-                                삭제
-                              </Button>
-                            </div>
-                          </Card>
-                        </>
-                      )
-                    })}
-                </CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <Typography variant='body2' sx={{ mr: 2 }}>
+                  Already have an account?
+                </Typography>
+                <Typography variant='body2'>
+                  <LinkStyled href='/login'>Sign in instead</LinkStyled>
+                </Typography>
               </Box>
-            )
-          })}
-        </CardContent>
-      </Card>
-    </Grid>
+              <Divider sx={{ my: theme => `${theme.spacing(5)} !important` }}>or</Divider>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <IconButton href='/' component={Link} sx={{ color: '#497ce2' }} onClick={e => e.preventDefault()}>
+                  <Icon icon='mdi:facebook' />
+                </IconButton>
+                <IconButton href='/' component={Link} sx={{ color: '#1da1f2' }} onClick={e => e.preventDefault()}>
+                  <Icon icon='mdi:twitter' />
+                </IconButton>
+                <IconButton
+                  href='/'
+                  component={Link}
+                  onClick={e => e.preventDefault()}
+                  sx={{ color: theme => (theme.palette.mode === 'light' ? '#272727' : 'grey.300') }}
+                >
+                  <Icon icon='mdi:github' />
+                </IconButton>
+                <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={e => e.preventDefault()}>
+                  <Icon icon='mdi:google' />
+                </IconButton>
+              </Box>
+            </form>
+          </BoxWrapper>
+        </Box>
+      </RightWrapper>
+    </Box>
   )
 }
+
+Register.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+
+Register.guestGuard = true
+
+export default Register

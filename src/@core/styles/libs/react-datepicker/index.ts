@@ -22,11 +22,9 @@ const DatePickerWrapper = styled(Box)<BoxProps>(({ theme }) => {
       zIndex: 20
     },
     '& .react-datepicker-wrapper': {
-      width: '150%'
+      width: '100%'
     },
     '& .react-datepicker': {
-      // position: 'relative',
-      // transform: 'translate3d(0px, 0px, 0px)',
       color: theme.palette.text.primary,
       borderRadius: theme.shape.borderRadius,
       fontFamily: theme.typography.fontFamily,

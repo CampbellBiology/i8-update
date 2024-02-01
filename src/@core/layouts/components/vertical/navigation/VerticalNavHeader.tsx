@@ -15,7 +15,6 @@ import Icon from 'src/@core/components/icon'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
-import { Grid } from '@mui/material'
 
 interface Props {
   navHover: boolean
@@ -97,7 +96,7 @@ const VerticalNavHeader = (props: Props) => {
         userNavMenuBranding(props)
       ) : (
         <LinkStyled href='/'>
-          {/* <svg
+          <svg
             width={30}
             height={25}
             version='1.1'
@@ -155,17 +154,9 @@ const VerticalNavHeader = (props: Props) => {
                 </g>
               </g>
             </g>
-          </svg> */}
-          <Grid>
-            {navCollapsed && !navHover ? (
-              <img src='/images/INTSAIN 배경없는-로고.gif' width='20px' alt='로고' style={{ marginLeft: '5px' }}></img>
-            ) : (
-              <img src='/images/INTSAIN 배경없는-CI.gif' width='150px' alt='로고' style={{ marginLeft: '5px' }}></img>
-            )}
-          </Grid>
-
+          </svg>
           <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 3 }) }}>
-            {/* {themeConfig.templateName} */}
+            {themeConfig.templateName}
           </HeaderTitle>
         </LinkStyled>
       )}

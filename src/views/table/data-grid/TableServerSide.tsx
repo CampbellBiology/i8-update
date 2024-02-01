@@ -14,6 +14,7 @@ import axios from 'axios'
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import ServerSideToolbar from 'src/views/table/data-grid/ServerSideToolbar'
 
 // ** Types Imports
 import { ThemeColor } from 'src/@core/layouts/types'
@@ -21,7 +22,6 @@ import { DataGridRowType } from 'src/@fake-db/types'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
-import ServerSideToolbar2 from './ServerSideToolbar2'
 
 interface StatusObj {
   [key: number]: {
@@ -196,8 +196,7 @@ const TableServerSide = () => {
 
   return (
     <Card>
-      <CardHeader title='전체 리스트 및 조회 결과' />
-      {/* <CardHeader title='Server Side' /> */}
+      <CardHeader title='Server Side' />
       <DataGrid
         autoHeight
         pagination
@@ -210,8 +209,7 @@ const TableServerSide = () => {
         pageSizeOptions={[7, 10, 25, 50]}
         paginationModel={paginationModel}
         onSortModelChange={handleSortModel}
-        // ServerSide1: 검색창, ServerSideToolbar2: 커스텀한 메뉴(선택삭제 수정 등등 버튼들)
-        slots={{ toolbar: ServerSideToolbar2 }}
+        slots={{ toolbar: ServerSideToolbar }}
         onPaginationModelChange={setPaginationModel}
         slotProps={{
           baseButton: {

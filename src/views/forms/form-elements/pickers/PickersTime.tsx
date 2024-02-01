@@ -12,22 +12,15 @@ import { DateType } from 'src/types/forms/reactDatepickerTypes'
 
 // ** Custom Component Imports
 import CustomInput from './PickersCustomInput'
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
-const PickersTime = ({
-  popperPlacement,
-  condition
-}: {
-  popperPlacement: ReactDatePickerProps['popperPlacement']
-  condition?: string
-}) => {
+const PickersTime = ({ popperPlacement }: { popperPlacement: ReactDatePickerProps['popperPlacement'] }) => {
   // ** States
   const [time, setTime] = useState<DateType>(new Date())
   const [dateTime, setDateTime] = useState<DateType>(new Date())
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }} className='demo-space-x'>
-      {/* <div>
+      <div>
         <DatePicker
           showTimeSelect
           selected={time}
@@ -39,7 +32,7 @@ const PickersTime = ({
           onChange={(date: Date) => setTime(date)}
           customInput={<CustomInput label='Time Only' />}
         />
-      </div> */}
+      </div>
       <div>
         <DatePicker
           showTimeSelect
@@ -50,7 +43,7 @@ const PickersTime = ({
           dateFormat='MM/dd/yyyy h:mm aa'
           popperPlacement={popperPlacement}
           onChange={(date: Date) => setDateTime(date)}
-          customInput={<CustomInput label={condition} />}
+          customInput={<CustomInput label='Date & Time' />}
         />
       </div>
     </Box>
