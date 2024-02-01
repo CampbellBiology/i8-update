@@ -1,0 +1,144 @@
+@font-face {
+  font-family: 'NanumSquare'; /* 사용하고 싶은 font-family명을 지정 */
+  src: url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css'); /* 폰트파일 불러오기 */
+}
+
+@font-face {
+  font-family: 'NanumSquareNeo';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2')
+    format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+body {
+  font-family: 'NanumSquareAc', sans-serif;
+} */
+
+@font-face {
+  font-family: 'NanumSquareAc';
+  src: url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+#__next {
+  height: 100%;
+}
+
+code {
+  font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
+  padding: 0.1rem 0.4rem;
+  font-size: 90%;
+  color: #d400ff;
+  border-radius: 0.1335rem;
+}
+code:not([class*='language-']):before,
+code:not([class*='language-']):after {
+  content: '`';
+}
+code[class*='language-'] {
+  padding: 0;
+}
+
+/* 테이블 커스텀 */
+
+table {
+  border: 1px solid #ddd;
+  border-spacing: 0;
+  border-radius: 5px;
+  width: fit-content;
+}
+
+th {
+  padding: 10px;
+  font-weight: 400;
+  text-align: left;
+}
+
+table thead th {
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+/* table thead tr th {
+  width: 60px;
+} */
+
+.UI_column {
+  width: 60px;
+  /* background-color: lightsalmon; */
+}
+
+.data_column {
+  min-width: 130px;
+  max-width: 250px;
+  /* background-color: #d400ff; */
+}
+
+table tbody tr td {
+  min-width: 120px;
+  padding: 10px;
+  margin: 0;
+}
+
+table tbody tr td:nth-child(1) {
+  min-width: auto;
+}
+
+table tbody tr:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+table tbody table {
+  width: fit-content;
+  text-align: center;
+}
+
+table tbody table th {
+  /* background-color: #d400ff; */
+  min-width: 150px;
+  text-align: center;
+}
+
+.select_row {
+  background-color: rgb(230, 230, 230);
+}
+
+table tbody tr.disabled_row:hover {
+  background-color: transparent;
+  cursor: default;
+}
+
+.disabled_row {
+  color: rgb(199, 199, 199);
+}
+
+/* 테이블 커스텀 */
+
+.customizedCheckbox {
+  margin-bottom: 6px;
+  height: 25px;
+  width: 40px;
+  border: none;
+  /* background-color: rgb(199, 199, 199), */
+  box-sizing: border-box;
+  /* position: relative; */
+  display: inline-block;
+  /* transition: border-color ease 0.2s; */
+  cursor: pointer;
+  background-image: url('./../public/images/chevron-down.png');
+  background-size: cover;
+}
+input[type='checkbox']:checked + label {
+  padding-top: -5px;
+  margin-bottom: 6px;
+  background-image: url('./../public/images/chevron-up.png');
+  background-size: cover;
+}
