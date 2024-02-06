@@ -17,7 +17,7 @@ import { useRouter } from 'next/router'
 // state of recoil
 import { globalRootState } from '../state'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
-import SearchAddress from '../register/SearchAddress'
+import SearchAddress from '../register-device/SearchAddress'
 
 declare global {
   interface Window {
@@ -83,7 +83,7 @@ export class ClusterNode {
   // 특정 클러스터에 접근하고, 하위 노드 탐색할 수 있는 함수
   findNodeByName(findArray: Array<string>): ClusterNode {
     let foundNode: ClusterNode = null
-    let startNodeName = findArray[0]
+    const startNodeName = findArray[0]
 
     // root node를 findArray의 0번째 요소로 초기화
     for (let i = 0; i < this.children.length; i++) {
@@ -95,7 +95,7 @@ export class ClusterNode {
 
     // findArray의 1번째 요소부터 노드로 선택하여 탐색
     for (let i = 1; i < findArray.length; i++) {
-      let nowName = findArray[i]
+      const nowName = findArray[i]
 
       for (let j = 0; j < foundNode.children.length; j++) {
         // 이름이 일치하는 자식 노드를 찾음
@@ -112,7 +112,7 @@ export class ClusterNode {
 
   // 가장 하위 노드들을 찾는 함수 -> 개수 구할 때 사용
   findLowestNodes(): Array<ClusterNode> {
-    let lowestNodes: ClusterNode[] = []
+    const lowestNodes: ClusterNode[] = []
 
     const traverse = (node: ClusterNode) => {
       // 자식이 없으면 최하위 노드인 것 -> 배열에 추가하여 count
@@ -139,7 +139,7 @@ export class ClusterNode {
 
   // 특정 depth의 모든 노드를 배열로 가져오는 함수
   getAllNodesAtDepth(root: ClusterNode, targetDepth: number): ClusterNode[] {
-    let nodes: ClusterNode[] = []
+    const nodes: ClusterNode[] = []
 
     const traverse = (node: ClusterNode, currentDepth: number) => {
       if (currentDepth === targetDepth) {
@@ -177,7 +177,7 @@ export class ClusterNode {
 
   // 특정 노드 배열을 매개변수로 받아 해당 배열의 각 요소 노드를 자식 노드로 갖고 있는 부모 노드의 배열을 반환하는 함수
   findParentNodesContainingNodes(targetNodes: ClusterNode[], root: ClusterNode): ClusterNode[] {
-    let parentNodes: ClusterNode[] = []
+    const parentNodes: ClusterNode[] = []
 
     const traverse = (node: ClusterNode, targets: ClusterNode[]) => {
       for (let i = 0; i < node.children.length; i++) {
@@ -217,6 +217,7 @@ export class ClusterNode {
     const recursion = (node: ClusterNode) => {
       if (node.name === name) {
         result = node
+
         // console.log(root)
         // return root;
       } else {
@@ -227,6 +228,7 @@ export class ClusterNode {
     }
 
     recursion(root)
+
     return result
   }
 }
@@ -248,7 +250,7 @@ export default function LocationPage() {
         withCredentials: true
       })
       .then(async response => {
-        let res = response.data
+        const res = response.data
 
         if (res.status === 'success') {
           if (!deviceData.length) setDeviceData(res.data)
@@ -258,12 +260,16 @@ export default function LocationPage() {
 
   // 루트 노드 생성
   const rootNode = new ClusterNode('Root', null, null, [], null)
+
   // 루트 노드 관리
   const [root, setRoot] = useState(rootNode)
+
   // 탐색용 노드 (루트 노드 복사본)
   const [rootCopy, setRootCopy] = useState(rootNode)
+
   // 특정 depth의 노드 배열
   const [nodeArrayAtDepth, setNodeArrayAtDepth] = useState(rootNode)
+
   // 루트 노드의 자식 관리
   const [childRoot, setChildRoot] = useState<Array<ClusterNode>>([])
 
@@ -307,6 +313,7 @@ export default function LocationPage() {
   const findSubClusters = (parentNode: ClusterNode) => {
     for (let i = 0; i < parentNode.children.length; i++) {
       const childNode = parentNode.children[i]
+
       // 각 하위 클러스터에 대한 작업 수행
       // console.log(childNode.name);
     }
@@ -386,7 +393,7 @@ export default function LocationPage() {
     if (deviceData.length) {
       deviceData?.map((item: Device) => {
         if (item.address) {
-          let dataArray = [
+          const dataArray = [
             item.address.split(' ')[0],
             item.address.split(' ')[1],
             item.address,

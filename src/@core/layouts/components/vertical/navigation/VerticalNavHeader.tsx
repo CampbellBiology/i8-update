@@ -4,7 +4,9 @@ import Link from 'next/link'
 // ** MUI Imports
 import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
-import { styled, useTheme } from '@mui/material/styles'
+
+// import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 import Typography, { TypographyProps } from '@mui/material/Typography'
 
 // ** Type Import
@@ -14,7 +16,8 @@ import { LayoutProps } from 'src/@core/layouts/types'
 import Icon from 'src/@core/components/icon'
 
 // ** Configs
-import themeConfig from 'src/configs/themeConfig'
+// import themeConfig from 'src/configs/themeConfig'
+import { Grid } from '@mui/material'
 
 interface Props {
   navHover: boolean
@@ -69,7 +72,7 @@ const VerticalNavHeader = (props: Props) => {
   } = props
 
   // ** Hooks & Vars
-  const theme = useTheme()
+  // const theme = useTheme()
   const { navCollapsed } = settings
 
   const menuCollapsedStyles = navCollapsed && !navHover ? { opacity: 0 } : { opacity: 1 }
@@ -96,7 +99,7 @@ const VerticalNavHeader = (props: Props) => {
         userNavMenuBranding(props)
       ) : (
         <LinkStyled href='/'>
-          <svg
+          {/* <svg
             width={30}
             height={25}
             version='1.1'
@@ -154,9 +157,17 @@ const VerticalNavHeader = (props: Props) => {
                 </g>
               </g>
             </g>
-          </svg>
+          </svg> */}
+          <Grid>
+            {navCollapsed && !navHover ? (
+              <img src='/images/INTSAIN 배경없는-로고.gif' width='20px' alt='로고' style={{ marginLeft: '10px' }}></img>
+            ) : (
+              <img src='/images/intsainLogoLong.gif' width='150px' alt='로고' style={{ marginLeft: '5px' }}></img>
+            )}
+          </Grid>
+
           <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 3 }) }}>
-            {themeConfig.templateName}
+            {/* {themeConfig.templateName} */}
           </HeaderTitle>
         </LinkStyled>
       )}
