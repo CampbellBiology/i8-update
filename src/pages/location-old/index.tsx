@@ -338,7 +338,7 @@ export default function LocationPage() {
     // router push func
     const move = (query: any) => {
       router.push({
-        pathname: '/sensor/info',
+        pathname: '/data-center',
         query: query
       })
     }
