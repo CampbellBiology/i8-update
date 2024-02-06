@@ -61,7 +61,7 @@ export default function List({ device, list, moveSlow, highlight }) {
     }
 
     router.push({
-      pathname: '/info',
+      pathname: '/data-center',
       query: queryObject(addressSplit[0], addressSplit[1], address, cluster, location)
     })
   }
