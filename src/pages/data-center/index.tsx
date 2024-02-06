@@ -21,7 +21,7 @@ import { DeviceClusterInfo, deviceClusterInfoState, globalRootState } from '../s
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 
 // root type
-import { ClusterNode } from '../location/index'
+import { ClusterNode } from '../location-old/index'
 
 // graph : react-chartjs-2
 import {
@@ -150,11 +150,11 @@ const Graph = ({
 
   const createData = () => {
     if (Object.keys(deviceGraphData).length !== 0) {
-      let data: any = []
+      const data: any = []
 
       Object.keys(deviceGraphData).map(async (serialNumber, idx) => {
         if (selectedGraphKey === 'temperature' || selectedGraphKey === 'humidity') {
-          let dataObj = {
+          const dataObj = {
             label: serialNumber,
             data: deviceGraphData[serialNumber].map((item: any) => item[selectedGraphKey]),
             borderColor: graphColorArray[idx].color,
@@ -166,14 +166,14 @@ const Graph = ({
           }
         } else if (selectedGraphKey === 'data_amount') {
           if (selectedDataAmountUnitKey === 'average_data_amount') {
-            let dataObj1 = {
+            const dataObj1 = {
               label: `${serialNumber} 수신량`,
               data: deviceGraphData[serialNumber].map((item: any) => item.receive_data_amount),
               borderColor: graphColorArrayByDataAmount[0].color,
               backgroundColor: graphColorArrayByDataAmount[0].colorWithOpacity,
               borderWidth: 1
             }
-            let dataObj2 = {
+            const dataObj2 = {
               label: `${serialNumber} 송신량`,
               data: deviceGraphData[serialNumber].map((item: any) => item.transmit_data_amount),
               borderColor: graphColorArrayByDataAmount[1].color,
@@ -184,7 +184,7 @@ const Graph = ({
             data.push(dataObj1)
             data.push(dataObj2)
           } else if (selectedDataAmountUnitKey === 'accumulate_data_amount') {
-            let dataObj1 = {
+            const dataObj1 = {
               label: `${serialNumber} 누적 수신량`,
               data: (dataAmountData[serialNumber]?.cumulativeReceiveDataArray).map((item: any) => {
                 const date = new Date(item.date)
@@ -197,7 +197,7 @@ const Graph = ({
               backgroundColor: graphColorArrayByDataAmount[0].colorWithOpacity,
               borderWidth: 1
             }
-            let dataObj2 = {
+            const dataObj2 = {
               label: `${serialNumber} 누적 송신량`,
               data: (dataAmountData[serialNumber]?.cumulativeTransmitDataArray).map((item: any) => {
                 const date = new Date(item.date)
@@ -488,8 +488,8 @@ const Sticker_ = ({ serialNumber, data, setDeviceCoordinates, deviceCoordinates 
   let lastY = 0
   let startX = 0
   let startY = 0
-  let parentX = 800
-  let parentY = 600
+  const parentX = 800
+  const parentY = 600
 
   const onMove = useCallback((e: MouseEvent) => {
     e.preventDefault()
@@ -524,12 +524,12 @@ const Sticker_ = ({ serialNumber, data, setDeviceCoordinates, deviceCoordinates 
     wrapRef.current.style.top = `${wrapRef.current.offsetTop - lastY}px`
     wrapRef.current.style.left = `${wrapRef.current.offsetLeft - lastX}px`
 
-    let coordinate = {
+    const coordinate = {
       imageX: wrapRef.current.offsetTop - lastY,
       imageY: wrapRef.current.offsetLeft - lastX
     }
 
-    let copyData = { ...deviceCoordinates }
+    const copyData = { ...deviceCoordinates }
     copyData[serialNumber] = coordinate
     setDeviceCoordinates(copyData)
   }, [])
@@ -616,6 +616,7 @@ const StickerTest = ({ graphCount, deviceGraphData, deviceImage, deviceGraphCopy
     Object.keys(deviceGraphData).map(async key => {
       await axios.post('/api/device/image/register/coordinate', {
         product_serial_number: key,
+
         // image_x: deviceCoordinates[key].imageX,
         // image_y: deviceCoordinates[key].imageY
         image_x: deviceCoordinates[key]?.imageX ?? null, // Access safely with ?. and provide a default value if null
@@ -625,7 +626,7 @@ const StickerTest = ({ graphCount, deviceGraphData, deviceImage, deviceGraphCopy
   }
 
   useEffect(() => {
-    let graphCountArrayCopy = []
+    const graphCountArrayCopy = []
     let i = 0
 
     while (i < graphCount) {
@@ -636,7 +637,7 @@ const StickerTest = ({ graphCount, deviceGraphData, deviceImage, deviceGraphCopy
     const deviceImageSrc_ = `data:image/png;base64,${deviceImage}`
     setDeviceImageSrc(deviceImageSrc_)
 
-    for (let key in Object.keys(deviceGraphData)) {
+    for (const key in Object.keys(deviceGraphData)) {
       deviceCoordinates[key] = {
         imageX: null,
         imageY: null
@@ -717,6 +718,7 @@ const CsvDownload = ({ tableId, filename }: csvProps) => {
     const table = document.getElementById(tableId) as HTMLTableElement
     if (!table) {
       console.error(`Table with id '${tableId}' not found.`)
+
       return
     }
 
@@ -815,7 +817,8 @@ const AllDataToCSV = ({
               const item = deviceGraphData[key]
 
               return item.map((obj, idx) => {
-                let date = new Date(obj.measurement_timestamp)
+                const date = new Date(obj.measurement_timestamp)
+
                 return (
                   <Table.Row key={`${key}-${idx}-all-data-table`}>
                     <Table.Cell>I8-SENSOR</Table.Cell>
@@ -882,8 +885,8 @@ const DataAmountToCSV = ({
 
           <Table.Body className='divide-y text-center'>
             {Object.keys(deviceGraphCopyData).map(serialNumber => {
-              let item = deviceGraphCopyData[serialNumber]
-              let amountItem = deviceDataAmountObject[serialNumber]
+              const item = deviceGraphCopyData[serialNumber]
+              const amountItem = deviceDataAmountObject[serialNumber]
 
               const transmitDataAmountInfoBySerialNumber = {
                 all: amountItem?.transmit.all,
@@ -935,8 +938,8 @@ const DataAmountToCSV = ({
 export default function InfoPage() {
   const router = useRouter()
 
-  let checkedClusterName = router?.query.checkedClusterName
-  let checkedClusterInfoName = router?.query.checkedClusterInfoName
+  const checkedClusterName = router?.query.checkedClusterName
+  const checkedClusterInfoName = router?.query.checkedClusterInfoName
 
   // 루트를 전역으로 관리
   const reqGlobalRootState: ClusterNode = useRecoilValue(globalRootState)
@@ -978,7 +981,7 @@ export default function InfoPage() {
 
   const getDeviceData = async () => {
     await axios.get('/api/device').then(response => {
-      let res = response.data
+      const res = response.data
       if (res.status === 'success') {
         if (!deviceData.length) setDeviceData(res.data)
       } else {
@@ -994,27 +997,29 @@ export default function InfoPage() {
     if (checked) {
       if (graphCount > 4) {
         target.checked = false
+
         return
       }
 
       if (!deviceDataByClusterKey) return
 
-      let data = deviceDataByClusterKey.filter((item: Device) => item.product_serial_number === serialNumber)
+      const data = deviceDataByClusterKey.filter((item: Device) => item.product_serial_number === serialNumber)
 
       await data.sort((a: Device, b: Device) => {
         const dateA: any = new Date(a.measurement_timestamp)
         const dateB: any = new Date(b.measurement_timestamp)
+
         return dateA - dateB
       })
 
-      let deviceGraphDataCopy: any = { ...deviceGraphData }
+      const deviceGraphDataCopy: any = { ...deviceGraphData }
       deviceGraphDataCopy[serialNumber] = data
 
       setDeviceGraphData(deviceGraphDataCopy)
       setDeviceGraphCopyData(deviceGraphDataCopy)
       setGraphCount(prev => prev + 1)
     } else {
-      let deviceGraphDataCopy: any = { ...deviceGraphData }
+      const deviceGraphDataCopy: any = { ...deviceGraphData }
       delete deviceGraphDataCopy[serialNumber]
       setDeviceGraphData(deviceGraphDataCopy)
       setDeviceGraphCopyData(deviceGraphDataCopy)
@@ -1078,16 +1083,16 @@ export default function InfoPage() {
       setSearchGraphDataBySelectedDateStatus('기간을 다시 확인해 주세요.')
     } else {
       setSearchGraphDataBySelectedDateStatus('')
-      let deviceGraphDataCopy: any = { ...deviceGraphCopyData }
-      let deviceListDataCopy: any = { ...deviceGraphCopyData }
+      const deviceGraphDataCopy: any = { ...deviceGraphCopyData }
+      const deviceListDataCopy: any = { ...deviceGraphCopyData }
 
-      let deviceDataAmountObjectCopy: any = { ...deviceDataAmountObject }
+      const deviceDataAmountObjectCopy: any = { ...deviceDataAmountObject }
 
       // 기기별로 적용
       // await Object.keys(deviceListDataCopy).map(async (key: string) => {
       await Promise.all(
         Object.keys(deviceListDataCopy).map(async (key: string) => {
-          let deviceListDataKeyCopy = [...deviceListDataCopy[key]]
+          const deviceListDataKeyCopy = [...deviceListDataCopy[key]]
 
           // 설정한 기간 내의 데이터만 filtering
           const deviceListDataFiltered: any = deviceListDataKeyCopy.filter(
@@ -1099,13 +1104,13 @@ export default function InfoPage() {
           let sum_receive = 0
           let sum_transmit = 0
 
-          let receive_averages: any = {
+          const receive_averages: any = {
             dailyAverages: {},
             monthlyAverages: {},
             yearAverages: {}
           }
 
-          let transmit_averages: any = {
+          const transmit_averages: any = {
             dailyAverages: {},
             monthlyAverages: {},
             yearAverages: {}
@@ -1203,7 +1208,7 @@ export default function InfoPage() {
             transmit: averagesInfo
           }
 
-          let averagesResult: averagesResult = {
+          const averagesResult: averagesResult = {
             receive: {
               dailyAveragesResult: { sum: 0, count: 0 },
               monthlyAveragesResult: { sum: 0, count: 0 },
@@ -1304,7 +1309,7 @@ export default function InfoPage() {
           sum_receive_data_amount: number | null
           sum_transmit_data_amount: number | null
         }
-        let pushData: pushData = {
+        const pushData: pushData = {
           product_serial_number: key,
           measurement_timestamp: new Date(d),
           humidity: null,
@@ -1348,6 +1353,7 @@ export default function InfoPage() {
         // 데이터가 있는 경우
         if (existingData.length) {
           pushData.measurement_timestamp = new Date(existingData[0].measurement_timestamp)
+
           // 현재 시각의 key에 데이터가 여러개면(배열 형태), 평균값 삽입
           if (existingData.length > 1) {
             const sumTemperature = existingData.reduce((sum: number, currentValue: Device) => {
@@ -1380,14 +1386,15 @@ export default function InfoPage() {
             pushData.transmit_data_amount = existingData[0].transmit_data_amount
           }
         }
+
         // 데이터가 없는 경우 : null인 상태로 삽입
         deviceGraphDataFiltered.push(pushData)
       }
 
-      let accumulateObj: any = {}
+      const accumulateObj: any = {}
 
       await Object.keys(deviceGraphData).map(async key => {
-        let deviceGraphDataKeyCopy = [...deviceGraphCopyData[key]]
+        const deviceGraphDataKeyCopy = [...deviceGraphCopyData[key]]
         const deviceGraphDataFiltered: Array<Device> = []
 
         if (selectedGraphUnitKey === 'min') {
@@ -1419,6 +1426,7 @@ export default function InfoPage() {
         await deviceGraphDataFiltered.sort((a: Device, b: Device) => {
           const dateA: any = new Date(a.measurement_timestamp)
           const dateB: any = new Date(b.measurement_timestamp)
+
           return dateA - dateB
         })
 
@@ -1437,6 +1445,7 @@ export default function InfoPage() {
 
   // 루트 노드 생성
   const rootNode = new ClusterNode('Root', null, null, [], null)
+
   // 루트 노드 관리
   const [root, setRoot] = useState(rootNode)
 
@@ -1489,26 +1498,29 @@ export default function InfoPage() {
     let index = -1
     let requestKey
 
-    let tempObj: any = {
+    const tempObj: any = {
       selectedCity,
       selectedGu,
       selectedAddress,
       selectedGroup,
       selectedLocation
     }
+
     // console.log(tempObj)
 
     Object.keys(tempObj).map(item => {
       if (tempObj[item]) {
         index++
         requestKey = tempObj[item]
+
         // console.log(item)
         // console.log(index)
       }
     })
 
     if (index !== -1) {
-      let requestClusterKey = clusterArray[index]
+      const requestClusterKey = clusterArray[index]
+
       // console.log(requestClusterKey, requestKey)
       getDeviceDataByClusterKey(requestKey, requestClusterKey)
       setAllDataNode(reqGlobalRootState.findByNodeRecursion(requestKey, reqGlobalRootState)?.findLowestNodes())
@@ -1522,7 +1534,7 @@ export default function InfoPage() {
           location: selectedLocation
         })
         .then(response => {
-          let res = response.data
+          const res = response.data
 
           if (res.status === 'success' && res.data !== null) {
             setDeviceImage(res.data)
@@ -1571,12 +1583,13 @@ export default function InfoPage() {
 
       // cluster 단위 (시, 구, ...)
       let requestClusterKey: string
+
       // cluster 이름 (부산, 서울, ...)
       let requestKey: string | undefined | string[]
       let requestDepth: number
       let index = 0
 
-      for (let key of Object.keys(router.query)) {
+      for (const key of Object.keys(router.query)) {
         const requestKeyName: string | undefined | string[] = router.query[key]
 
         if (requestKeyName) {
@@ -1601,6 +1614,7 @@ export default function InfoPage() {
     edDate.setDate(stDate.getDate() - 14)
     setEndDate(stDate)
     setStartDate(edDate)
+
     // changeLocation();
   }, [selectedCity, routeStatus, selectedGu, selectedAddress, selectedGroup, selectedLocation])
 
@@ -1934,20 +1948,21 @@ export default function InfoPage() {
           <CardContent className='max-h-[920px] overflow-y-scroll'>
             {allDataNode?.map((item: ClusterNode, index) => {
               if (deviceDataByClusterKey) {
-                let data = deviceDataByClusterKey.filter(
+                const data = deviceDataByClusterKey.filter(
                   item_ => item_.product_serial_number === item.product_serial_number
                 )
 
                 data.sort((a: Device, b: Device) => {
                   const dateA: any = new Date(a.measurement_timestamp)
                   const dateB: any = new Date(b.measurement_timestamp)
+
                   return dateA - dateB
                 })
 
                 // 불쾌지수 계산
-                let currentData = data.slice(-2, -1)
+                const currentData = data.slice(-2, -1)
                 if (currentData.length) {
-                  var discomfort: number =
+                  const discomfort: number =
                     (9 / 5) * currentData.temperature -
                     0.55 * (1 - currentData.humidity / 100) * ((9 / 5) * currentData.temperature - 26) +
                     32
