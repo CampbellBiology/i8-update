@@ -20,7 +20,7 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: '데이터 센터',
-      path: '/info',
+      path: '/data-center',
       icon: 'mdi-chart-bar'
     }
   ]
