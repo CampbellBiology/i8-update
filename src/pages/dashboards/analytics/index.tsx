@@ -22,14 +22,173 @@ import AnalyticsDepositWithdraw from 'src/views/dashboards/analytics/AnalyticsDe
 import AnalyticsSalesByCountries from 'src/views/dashboards/analytics/AnalyticsSalesByCountries'
 import AnalyticsTransactionsCard from 'src/views/dashboards/analytics/AnalyticsTransactionsCard'
 
+// import SocketIOClient from 'socket.io-client'
+import { useCallback, useEffect, useState } from 'react'
+import axios from 'axios'
+
+import { io, Socket } from 'socket.io-client'
+import ChatBoard from './chatBoard'
+import { Box, Card, CardContent, CardHeader } from '@mui/material'
+
+interface ServerToClientEvents {
+  noArg: () => void
+  basicEmit: (a: number, b: string, c: Buffer) => void
+  withAck: (d: string, callback: (e: number) => void) => void
+  message: (message: IMessage) => void
+}
+
+interface ClientToServerEvents {
+  hello: () => void
+  message: (message: IMessage) => void
+}
+
+interface IMessage {
+  user: string
+  message: string
+}
+
 const AnalyticsDashboard = () => {
+  const [sendMessage, setSendMessage] = useState<string>('')
+  const [connected, setConnected] = useState<boolean>(false)
+  const [chat, setChat] = useState<IMessage[]>([])
+
+  // const username = useSelector(state => state.user.name)
+  const username = 'hyunha'
+  const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
+
+  useEffect((): any => {
+    // log socket connection
+    socket.on('connect', () => {
+      console.log('SOCKET CONNECTED!', socket.id)
+      socket.emit('userId', socket.id)
+
+      setConnected(true)
+
+      socket.on('message', message => {
+        chat.push(message)
+        setChat([...chat])
+        console.log(message)
+      })
+    })
+
+    // socket.on('message', message => {
+    //   chat.push(message)
+    //   setChat([...chat])
+    //   console.log(message)
+    // })
+
+    // update chat on new message dispatched
+    // socket.on('message', (message: IMessage) => {
+    //   chat.push(message)
+    //   setChat([...chat])
+    //   console.log(message)
+    // })
+
+    // socket.on('message', message => {
+    //   chat.push(message)
+    //   setChat([...chat])
+    //   console.log(message)
+    // })
+
+    // socket disconnect on component unmount if exists
+    if (socket) return () => socket.disconnect()
+  }, [])
+
+  // useEffect(() => {
+  //   socket.on('message', message => {
+  //     chat.push(message)
+  //     setChat([...chat])
+  //     // console.log(message)
+  //   })
+  // }, [socket])
+
+  const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSendMessage(event.target.value)
+  }, [])
+
+  const enterKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      // send message
+      event.preventDefault()
+      submitSendMessage(event)
+    }
+  }
+
+  const submitSendMessage = async (event: React.FormEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    if (sendMessage) {
+      const message: IMessage = {
+        user: username,
+        message: sendMessage
+      }
+
+      socket.emit('message', message)
+
+      // const response = await axios.post('/api/chat', message)
+      setSendMessage('')
+    }
+  }
+
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid item xs={12} md={4}>
-          <AnalyticsTrophy />
+        <Grid item xs={12} md={12} lg={12}>
+          <Card>
+            <CardHeader title='기기 현황'></CardHeader>
+            <Grid container spacing={6} padding={5}>
+              <Grid item xs={12} md={6} lg={2}>
+                <Card sx={{ p: 3 }}>
+                  <Box>총 등록 기기</Box>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6} lg={2}>
+                <Card sx={{ p: 3 }}>
+                  <Box>사용 중</Box>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6} lg={2}>
+                <Card sx={{ p: 3 }}>
+                  <Box>!</Box>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6} lg={2}>
+                <Card sx={{ p: 3 }}>
+                  <Box>업데이트 예정</Box>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6} lg={2}>
+                <Card sx={{ p: 3 }}>
+                  <Box>배터리 부족</Box>
+                </Card>
+              </Grid>
+            </Grid>
+          </Card>
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={6} lg={4}>
+          <AnalyticsTotalEarning />
+        </Grid>
+        <Grid item xs={12} md={6} lg={8}>
+          <AnalyticsTable />
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <AnalyticsTotalEarning />
+        </Grid>
+        <Grid item xs={12} md={6} lg={8}>
+          <AnalyticsTable />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <ChatBoard
+            chat={chat}
+            username={username}
+            sendMessage={sendMessage}
+            sendMessageHandler={sendMessageHandler}
+            enterKeyPress={enterKeyPress}
+            connected={connected}
+            submitSendMessage={submitSendMessage}
+          />
+          {/* <AnalyticsTrophy /> */}
+        </Grid>
+        {/* <Grid item xs={12} md={8}>
           <AnalyticsTransactionsCard />
         </Grid>
         <Grid item xs={12} md={6} lg={4}>
@@ -79,7 +238,7 @@ const AnalyticsDashboard = () => {
         </Grid>
         <Grid item xs={12} md={12} lg={8}>
           <AnalyticsTable />
-        </Grid>
+        </Grid> */}
       </Grid>
     </ApexChartWrapper>
   )

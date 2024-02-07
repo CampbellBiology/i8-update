@@ -49,7 +49,7 @@ export default function RegisterPage() {
         withCredentials: true
       })
       .then(response => {
-        let res = response.data
+        const res = response.data
         if (res.status === 'success') {
           setDevice(res.data)
           console.log(res.data)
@@ -58,24 +58,6 @@ export default function RegisterPage() {
         }
       })
   }
-
-  //장소 이미지용 240115
-  // const getDeviceImage= async () => {
-  //     await axios.get("/api/device/imageAll", {
-  //         withCredentials: true,
-  //     })
-  //         .then((response) => {
-  //             let res = response.data;
-  //             if (res.status === "success") {
-  //                 setLocationImage(res.data);
-  //                 console.log(locationImage)
-  //                 console.log(res.data)
-  //             }
-  //             else {
-  //                 console.log("fail");
-  //             }
-  //         })
-  // }
 
   const registerAddress = async () => {
     await axios
@@ -92,7 +74,7 @@ export default function RegisterPage() {
         }
       )
       .then(response => {
-        let res = response.data
+        const res = response.data
         if (res.status === 'success') {
           // setDevice(res.data);
           console.log(res.data)
@@ -109,7 +91,7 @@ export default function RegisterPage() {
     formData.append('cluster', inputCluster)
     formData.append('location', inputLocation)
 
-    let config = {
+    const config = {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
@@ -117,7 +99,7 @@ export default function RegisterPage() {
     }
 
     await axios.post('/api/device/image/register', formData, config).then(response => {
-      let res = response.data
+      const res = response.data
 
       if (res.status === 'success') {
         setInputStatusMessage('기기 등록이 완료되었습니다.')
@@ -125,6 +107,7 @@ export default function RegisterPage() {
         console.log('fail')
       }
     })
+
     // console.log("getDeviceInfo")
     getDeviceInfo()
   }
@@ -136,6 +119,7 @@ export default function RegisterPage() {
     device.map((item: Device) => {
       if (item.product_serial_number === inputProductSerialNumber) {
         setSnStatus(true)
+
         // snStatus = true;
       }
     })
@@ -164,6 +148,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     const addresses: string[] = []
+
     //중복 제거
     device.map(el => {
       if (!addresses.includes(el.address)) addresses.push(el.address)
