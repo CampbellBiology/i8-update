@@ -29,12 +29,18 @@ import axios from 'axios'
 import { io, Socket } from 'socket.io-client'
 import ChatBoard from './chatBoard'
 import { Box, Card, CardContent, CardHeader } from '@mui/material'
+import { warningRows } from '../data/warningData'
+import WarningTable from './warningTable'
+import DataUsageTable from './dataUsageTable'
+import { dataUsageRows } from '../data/dataUsageData'
 
 interface ServerToClientEvents {
-  noArg: () => void
-  basicEmit: (a: number, b: string, c: Buffer) => void
-  withAck: (d: string, callback: (e: number) => void) => void
+  // noArg: () => void
+  // basicEmit: (a: number, b: string, c: Buffer) => void
+  // withAck: (d: string, callback: (e: number) => void) => void
   message: (message: IMessage) => void
+  setting: (warning: []) => void
+  dataUsage: (dataUsage: []) => void
 }
 
 interface ClientToServerEvents {
@@ -49,58 +55,53 @@ interface IMessage {
 
 const AnalyticsDashboard = () => {
   const [sendMessage, setSendMessage] = useState<string>('')
-  const [connected, setConnected] = useState<boolean>(false)
   const [chat, setChat] = useState<IMessage[]>([])
+  const [connected, setConnected] = useState<boolean>(false)
+  const [warningRow, setWarningRow] = useState(warningRows)
+  const [dataUsageRow, setDataUsageRow] = useState([dataUsageRows])
 
   // const username = useSelector(state => state.user.name)
   const username = 'hyunha'
-  const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
+  const [socketConnectFlag, setSocketConnectFlag] = useState<boolean>(true)
+  // let socketConnectFlag = true
+  // const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
 
   useEffect((): any => {
     // log socket connection
-    socket.on('connect', () => {
-      console.log('SOCKET CONNECTED!', socket.id)
-      socket.emit('userId', socket.id)
+    if (socketConnectFlag) {
+      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
 
-      setConnected(true)
+      socket.on('connect', () => {
+        console.log('SOCKET CONNECTED!', socket.id)
+        //socket.emit('userId', socket.id)
 
-      socket.on('message', message => {
-        chat.push(message)
-        setChat([...chat])
-        console.log(message)
+        // 접속이후에 접근불가
+        setSocketConnectFlag(false)
+        // socketConnectFlag = false
+        setConnected(true)
       })
-    })
 
-    // socket.on('message', message => {
-    //   chat.push(message)
-    //   setChat([...chat])
-    //   console.log(message)
-    // })
+      // 서버로부터 데이터 들어오면
+      // socket.on('message', message => {
+      //   chat.push(message)
+      //   setChat([...chat])
+      //   // console.log(message)
+      // })
 
-    // update chat on new message dispatched
-    // socket.on('message', (message: IMessage) => {
-    //   chat.push(message)
-    //   setChat([...chat])
-    //   console.log(message)
-    // })
+      // socket.on('warning', warning => {
+      //   // setWarningRow(warning)
+      //   console.log(warning)
+      // })
 
-    // socket.on('message', message => {
-    //   chat.push(message)
-    //   setChat([...chat])
-    //   console.log(message)
-    // })
+      socket.on('dataUsage', dataUsage => {
+        setDataUsageRow(dataUsage)
+        console.log(dataUsage)
+      })
+    }
 
-    // socket disconnect on component unmount if exists
-    if (socket) return () => socket.disconnect()
-  }, [])
-
-  // useEffect(() => {
-  //   socket.on('message', message => {
-  //     chat.push(message)
-  //     setChat([...chat])
-  //     // console.log(message)
-  //   })
-  // }, [socket])
+    // if (socket) return () => socket.disconnect()
+    // if (socketConnectFlag === false) socket.disconnect()
+  }, [chat, socketConnectFlag])
 
   const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSendMessage(event.target.value)
@@ -121,7 +122,7 @@ const AnalyticsDashboard = () => {
         user: username,
         message: sendMessage
       }
-
+      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
       socket.emit('message', message)
 
       // const response = await axios.post('/api/chat', message)
@@ -133,49 +134,68 @@ const AnalyticsDashboard = () => {
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12} md={12} lg={12}>
-          <Card>
-            <CardHeader title='기기 현황'></CardHeader>
-            <Grid container spacing={6} padding={5}>
-              <Grid item xs={12} md={6} lg={2}>
-                <Card sx={{ p: 3 }}>
-                  <Box>총 등록 기기</Box>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6} lg={2}>
-                <Card sx={{ p: 3 }}>
-                  <Box>사용 중</Box>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6} lg={2}>
-                <Card sx={{ p: 3 }}>
-                  <Box>!</Box>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6} lg={2}>
-                <Card sx={{ p: 3 }}>
-                  <Box>업데이트 예정</Box>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6} lg={2}>
-                <Card sx={{ p: 3 }}>
-                  <Box>배터리 부족</Box>
-                </Card>
-              </Grid>
+          <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 기기 현황</Box>
+          <Grid container spacing={6}>
+            <Grid item xs={6} md={4} lg={2}>
+              <Card sx={{ p: 3 }}>
+                <Box>총 등록 기기</Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '100px', justifyContent: 'center' }}>
+                  <Icon icon='mdi-power-settings' width={20} />
+                  <Box sx={{ fontSize: '20px', pl: 2 }}> 11대</Box>
+                </Box>
+              </Card>
             </Grid>
-          </Card>
+            <Grid item xs={6} md={4} lg={2}>
+              <Card sx={{ p: 3 }}>
+                <Box>사용 중</Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '100px', justifyContent: 'center' }}>
+                  <Icon icon='mdi:pencil' width={20} />
+                  <Box sx={{ fontSize: '20px', pl: 2 }}> 11대</Box>
+                </Box>
+              </Card>
+            </Grid>
+            <Grid item xs={6} md={4} lg={2}>
+              <Card sx={{ p: 3 }}>
+                <Box>이상 기기</Box>{' '}
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '100px', justifyContent: 'center' }}>
+                  <Icon icon='mdi:pencil' width={20} />
+                  <Box sx={{ fontSize: '20px', pl: 2 }}> 11대</Box>
+                </Box>
+              </Card>
+            </Grid>
+            <Grid item xs={6} md={4} lg={2}>
+              <Card sx={{ p: 3 }}>
+                <Box>업데이트 예정</Box>
+              </Card>
+            </Grid>
+            <Grid item xs={6} md={4} lg={2}>
+              <Card sx={{ p: 3 }}>
+                <Box>배터리 부족</Box>
+              </Card>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <AnalyticsTotalEarning />
+
+        {/* 두번째줄 */}
+        <Grid item xs={12} md={6} lg={6}>
+          <Grid sx={{ py: 5 }}>
+            <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 실시간 현황</Box>
+            <AnalyticsTotalEarning />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6} lg={8}>
-          <AnalyticsTable />
+        <Grid item xs={12} md={6} lg={6}>
+          <Grid sx={{ py: 5 }}>
+            <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 이상 기온 및 습도 알림 전체 기기</Box>
+            <WarningTable warningRows={warningRow} />
+          </Grid>
+          <Grid sx={{ py: 5 }}>
+            <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 데이터 현황</Box>
+            {/* <DataUsageTable warningRows={warningRow} /> */}
+            <DataUsageTable dataUsageRows={dataUsageRow} />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <AnalyticsTotalEarning />
-        </Grid>
-        <Grid item xs={12} md={6} lg={8}>
-          <AnalyticsTable />
-        </Grid>
+
+        {/* 세번째줄 */}
         <Grid item xs={12} md={4}>
           <ChatBoard
             chat={chat}
@@ -186,59 +206,7 @@ const AnalyticsDashboard = () => {
             connected={connected}
             submitSendMessage={submitSendMessage}
           />
-          {/* <AnalyticsTrophy /> */}
         </Grid>
-        {/* <Grid item xs={12} md={8}>
-          <AnalyticsTransactionsCard />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <AnalyticsWeeklyOverview />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <AnalyticsTotalEarning />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <Grid container spacing={6}>
-            <Grid item xs={6}>
-              <AnalyticsTotalProfit />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='$25.6k'
-                icon={<Icon icon='mdi:poll' />}
-                color='secondary'
-                trendNumber='+42%'
-                title='Total Profit'
-                subtitle='Weekly Profit'
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='862'
-                trend='negative'
-                trendNumber='-18%'
-                title='New Project'
-                subtitle='Yearly Project'
-                icon={<Icon icon='mdi:briefcase-variant-outline' />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <AnalyticsSessions />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <AnalyticsPerformance />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <AnalyticsDepositWithdraw />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <AnalyticsSalesByCountries />
-        </Grid>
-        <Grid item xs={12} md={12} lg={8}>
-          <AnalyticsTable />
-        </Grid> */}
       </Grid>
     </ApexChartWrapper>
   )

@@ -58,7 +58,7 @@ const data: DataType[] = [
 
 const AnalyticsTotalEarning = () => {
   return (
-    <Card>
+    <Card sx={{ height: '950px' }}>
       <CardHeader
         title='Total Earning'
         titleTypographyProps={{ sx: { lineHeight: '1.6 !important', letterSpacing: '0.15px !important' } }}
