@@ -56,6 +56,7 @@
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.6.4",
     "hammerjs": "^2.0.8",
+    "http-proxy-middleware": "^2.0.6",
     "i18next": "22.4.15",
     "i18next-browser-languagedetector": "7.0.1",
     "i18next-http-backend": "2.2.0",

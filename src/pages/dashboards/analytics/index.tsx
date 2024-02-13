@@ -33,6 +33,7 @@ import { warningRows } from '../data/warningData'
 import WarningTable from './warningTable'
 import DataUsageTable from './dataUsageTable'
 import { dataUsageRows } from '../data/dataUsageData'
+import RealTime from './realtime'
 
 interface ServerToClientEvents {
   // noArg: () => void
@@ -58,7 +59,7 @@ const AnalyticsDashboard = () => {
   const [chat, setChat] = useState<IMessage[]>([])
   const [connected, setConnected] = useState<boolean>(false)
   const [warningRow, setWarningRow] = useState(warningRows)
-  const [dataUsageRow, setDataUsageRow] = useState([dataUsageRows])
+  const [dataUsageRow, setDataUsageRow] = useState(dataUsageRows)
 
   // const username = useSelector(state => state.user.name)
   const username = 'hyunha'
@@ -66,42 +67,42 @@ const AnalyticsDashboard = () => {
   // let socketConnectFlag = true
   // const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
 
-  useEffect((): any => {
-    // log socket connection
-    if (socketConnectFlag) {
-      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
+  // useEffect((): any => {
+  //   // log socket connection
+  //   if (socketConnectFlag) {
+  //     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.97:5000')
 
-      socket.on('connect', () => {
-        console.log('SOCKET CONNECTED!', socket.id)
-        //socket.emit('userId', socket.id)
+  //     socket.on('connect', () => {
+  //       console.log('SOCKET CONNECTED!', socket.id)
+  //       //socket.emit('userId', socket.id)
 
-        // 접속이후에 접근불가
-        setSocketConnectFlag(false)
-        // socketConnectFlag = false
-        setConnected(true)
-      })
+  //       // 접속이후에 접근불가
+  //       setSocketConnectFlag(false)
+  //       // socketConnectFlag = false
+  //       setConnected(true)
+  //     })
 
-      // 서버로부터 데이터 들어오면
-      // socket.on('message', message => {
-      //   chat.push(message)
-      //   setChat([...chat])
-      //   // console.log(message)
-      // })
+  //     // 서버로부터 데이터 들어오면
+  //     socket.on('message', message => {
+  //       chat.push(message)
+  //       setChat([...chat])
+  //       // console.log(message)
+  //     })
 
-      // socket.on('warning', warning => {
-      //   // setWarningRow(warning)
-      //   console.log(warning)
-      // })
+  //     socket.on('warning', warning => {
+  //       setWarningRow(warning)
+  //       console.log(warning)
+  //     })
 
-      socket.on('dataUsage', dataUsage => {
-        setDataUsageRow(dataUsage)
-        console.log(dataUsage)
-      })
-    }
+  //     // socket.on('dataUsage', dataUsage => {
+  //     //   setDataUsageRow(dataUsage)
+  //     //   console.log(dataUsage)
+  //     // })
+  //   }
 
-    // if (socket) return () => socket.disconnect()
-    // if (socketConnectFlag === false) socket.disconnect()
-  }, [chat, socketConnectFlag])
+  //   // if (socket) return () => socket.disconnect()
+  //   // if (socketConnectFlag === false) socket.disconnect()
+  // }, [chat, socketConnectFlag])
 
   const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSendMessage(event.target.value)
@@ -180,7 +181,7 @@ const AnalyticsDashboard = () => {
         <Grid item xs={12} md={6} lg={6}>
           <Grid sx={{ py: 5 }}>
             <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 실시간 현황</Box>
-            <AnalyticsTotalEarning />
+            <RealTime />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>

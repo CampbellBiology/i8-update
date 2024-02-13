@@ -340,11 +340,11 @@ const DateRange = ({ setDate, date }: DateProps) => {
       placeholderText={
         date
           ? `${String(date.getFullYear()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-              date.getDate()
-            ).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(
-              2,
-              '0'
-            )}:${String(date.getSeconds()).padStart(2, '0')}`
+            date.getDate()
+          ).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(
+            2,
+            '0'
+          )}:${String(date.getSeconds()).padStart(2, '0')}`
           : undefined
       }
     />
@@ -509,14 +509,14 @@ const Sticker_ = ({ serialNumber, data, setDeviceCoordinates, deviceCoordinates 
 
     if (
       wrapRef.current.offsetTop - lastY >=
-        wrapRef.current?.parentElement?.offsetTop + parentY - wrapRef.current?.clientHeight ||
+      wrapRef.current?.parentElement?.offsetTop + parentY - wrapRef.current?.clientHeight ||
       wrapRef.current?.offsetTop - lastY <= wrapRef.current?.parentElement?.offsetTop
     ) {
       return
     }
     if (
       wrapRef.current.offsetLeft - lastX >=
-        parentX - wrapRef.current?.parentElement?.offsetLeft * 2 - wrapRef.current?.clientWidth / 2 ||
+      parentX - wrapRef.current?.parentElement?.offsetLeft * 2 - wrapRef.current?.clientWidth / 2 ||
       wrapRef.current.offsetLeft - lastX <= wrapRef.current?.parentElement?.offsetLeft
     ) {
       return
@@ -584,9 +584,8 @@ const Sticker_ = ({ serialNumber, data, setDeviceCoordinates, deviceCoordinates 
       <div ref={wrapRef} onMouseDown={onMouseDown} className='absolute cursor-pointer flex'>
         <FlowbiteTooltip
           className='w-[150px] whitespace-pre'
-          content={`S/N: ${serialNumber}\n온도 : ${data.length ? data[0].temperature : '-'}℃\n습도 : ${
-            data.length ? data[0].humidity : '-'
-          }%`}
+          content={`S/N: ${serialNumber}\n온도 : ${data.length ? data[0].temperature : '-'}℃\n습도 : ${data.length ? data[0].humidity : '-'
+            }%`}
         >
           <Image src='/img/sensor.png' width={50} height={100} alt={serialNumber} />
         </FlowbiteTooltip>
@@ -1265,9 +1264,9 @@ export default function InfoPage() {
                   : 0,
               month:
                 averagesResult.receive.monthlyAveragesResult.sum &&
-                !isNaN(averagesResult.receive.monthlyAveragesResult.sum)
+                  !isNaN(averagesResult.receive.monthlyAveragesResult.sum)
                   ? averagesResult.receive.monthlyAveragesResult.sum /
-                    averagesResult.receive.monthlyAveragesResult.count
+                  averagesResult.receive.monthlyAveragesResult.count
                   : 0,
               year:
                 averagesResult.receive.yearAveragesResult.sum && !isNaN(averagesResult.receive.yearAveragesResult.sum)
@@ -1278,14 +1277,14 @@ export default function InfoPage() {
               all: sum_transmit && !isNaN(sum_transmit) ? sum_transmit : 0,
               daily:
                 averagesResult.transmit.dailyAveragesResult.sum &&
-                !isNaN(averagesResult.transmit.dailyAveragesResult.sum)
+                  !isNaN(averagesResult.transmit.dailyAveragesResult.sum)
                   ? averagesResult.transmit.dailyAveragesResult.sum / averagesResult.transmit.dailyAveragesResult.count
                   : 0,
               month:
                 averagesResult.transmit.monthlyAveragesResult.sum &&
-                !isNaN(averagesResult.transmit.monthlyAveragesResult.sum)
+                  !isNaN(averagesResult.transmit.monthlyAveragesResult.sum)
                   ? averagesResult.transmit.monthlyAveragesResult.sum /
-                    averagesResult.transmit.monthlyAveragesResult.count
+                  averagesResult.transmit.monthlyAveragesResult.count
                   : 0,
               year:
                 averagesResult.transmit.yearAveragesResult.sum && !isNaN(averagesResult.transmit.yearAveragesResult.sum)
