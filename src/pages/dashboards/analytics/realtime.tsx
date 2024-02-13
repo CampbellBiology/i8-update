@@ -11,23 +11,24 @@ const RealTime = () => {
 
   const [deviceImage, setDeviceImage] = useState()
 
-  // useEffect(() => {
-  //   axios
-  //     .post('http://183.101.208.3:14530/api/device/image', {
-  //       cluster: 'intsain',
-  //       location: '연구소장'
-  //     })
-  //     .then(response => {
-  //       const res = response.data
+  useEffect(() => {
+    axios
+      .post('/api/device/image', {
+        cluster: 'intsain',
+        location: '연구소장'
+      })
+      .then(response => {
+        const res = response.data
 
-  //       if (res.status === 'success' && res.data !== null) {
-  //         setDeviceImage(res.data)
+        if (res.status === 'success' && res.data !== null) {
+          const deviceImageSrc_ = `data:image/png;base64,${res.data}`
+          setDeviceImage(deviceImageSrc_)
 
-  //       } else {
-  //         console.log('fail')
-  //       }
-  //     })
-  // }, [])
+        } else {
+          console.log('fail')
+        }
+      })
+  }, [])
 
   console.log(deviceImage)
 
@@ -35,7 +36,16 @@ const RealTime = () => {
     <Card>
       <Grid sx={{ p: 5 }} container spacing={6}>
         <Grid sx={{ borer: '1px solid black', p: 5 }} item xs={6} md={4} lg={5}>
-          <Image src="/images/location_image_sample_1.png" width="250" height="250" alt="locationImage"></Image>
+          {/* <Image src="/images/location_image_sample_1.png" width="250" height="250" alt="locationImage"></Image> */}
+          {/* <Image src={`${deviceImage}`} width="250" height="250" alt="locationImage"></Image> */}
+          <div
+            style={{
+              backgroundImage: `url('${deviceImage}')`,
+              height: '100px',
+              width: '200px',
+              backgroundSize: 'cover'
+            }}
+          ></div>
         </Grid>
         <Grid sx={{ borer: '1px solid black', p: 5 }} item xs={6} md={4} lg={7}>
           <Box sx={{ fontSize: '16px' }}><b>설치 장소:</b> 서울시 구로구 디지털로 242</Box>
