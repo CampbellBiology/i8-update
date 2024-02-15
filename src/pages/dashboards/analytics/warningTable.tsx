@@ -146,9 +146,9 @@ const renderUserAvatar = (row: TableBodyRowType) => {
 
 const columns: GridColDef[] = [
   {
-    flex: 0.3,
+    flex: 0.2,
     field: 'location',
-    minWidth: 140,
+    minWidth: 110,
     headerName: '설치 장소',
     renderCell: ({ row }: CellType) => {
       return (
@@ -176,7 +176,7 @@ const columns: GridColDef[] = [
   },
   {
     flex: 0.2,
-    minWidth: 140,
+    minWidth: 110,
     field: 'SN',
     headerName: '기기 번호',
     renderCell: ({ row }: CellType) => (
@@ -187,7 +187,7 @@ const columns: GridColDef[] = [
   },
   {
     flex: 0.2,
-    minWidth: 150,
+    minWidth: 170,
     field: 'role',
     headerName: '설정 온도/습도',
     renderCell: ({ row }: CellType) => (
@@ -198,7 +198,7 @@ const columns: GridColDef[] = [
         <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
           {row.setting_temp}
         </Typography>
-        <CustomAvatar skin='light' color={'info'} sx={{ mr: 2, width: 20, height: 20, ml: 7 }}>
+        <CustomAvatar skin='light' color={'info'} sx={{ mr: 2, width: 20, height: 20, ml: 4 }}>
           <Icon icon='mdi-water' />
         </CustomAvatar>
         <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
@@ -209,7 +209,7 @@ const columns: GridColDef[] = [
   },
   {
     flex: 0.2,
-    minWidth: 150,
+    minWidth: 170,
     field: 'status',
     headerName: '측정 온도/습도',
     renderCell: ({ row }: CellType) => (
@@ -220,7 +220,7 @@ const columns: GridColDef[] = [
         <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
           {row.detected_temp}
         </Typography>
-        <CustomAvatar skin='light' color={'info'} sx={{ mr: 2, width: 20, height: 20, ml: 7 }}>
+        <CustomAvatar skin='light' color={'info'} sx={{ mr: 2, width: 20, height: 20, ml: 4 }}>
           <Icon icon='mdi-water' />
         </CustomAvatar>
         <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>

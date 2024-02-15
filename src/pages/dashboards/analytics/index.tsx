@@ -34,6 +34,7 @@ import WarningTable from './warningTable'
 import DataUsageTable from './dataUsageTable'
 import { dataUsageRows } from '../data/dataUsageData'
 import RealTime from './realtime'
+import { realTimeData } from '../data/realtimeData'
 
 interface ServerToClientEvents {
   // noArg: () => void
@@ -60,6 +61,7 @@ const AnalyticsDashboard = () => {
   const [connected, setConnected] = useState<boolean>(false)
   const [warningRow, setWarningRow] = useState(warningRows)
   const [dataUsageRow, setDataUsageRow] = useState(dataUsageRows)
+  const [realtimeData, setRealTimeData] = useState(realTimeData)
 
   // const username = useSelector(state => state.user.name)
   const username = 'hyunha'
@@ -98,15 +100,20 @@ const AnalyticsDashboard = () => {
   //     //   setDataUsageRow(dataUsage)
   //     //   console.log(dataUsage)
   //     // })
+
+  //     // socket.on('realtime', realtime => {
+  //     //   setRealtimeData(realtime)
+  //     //   console.log(realtime)
+  //     // })
   //   }
 
   //   // if (socket) return () => socket.disconnect()
   //   // if (socketConnectFlag === false) socket.disconnect()
   // }, [chat, socketConnectFlag])
 
-  const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSendMessage(event.target.value)
-  }, [])
+  // const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSendMessage(event.target.value)
+  // }, [])
 
   const enterKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -131,57 +138,107 @@ const AnalyticsDashboard = () => {
     }
   }
 
+  // const [timer, setTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`);
+  // const [updateTimer, setUpdateTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`)
+
+  // const currentTimer = () => {
+  //   const date = new Date();
+  //   const hours = String(date.getHours()).padStart(2, "0");
+  //   const minutes = String(date.getMinutes()).padStart(2, "0");
+  //   const seconds = String(date.getSeconds()).padStart(2, "0");
+  //   setTimer(`${hours}:${minutes}:${seconds}`)
+  // }
+
+  // const startTimer = () => {
+  //   setInterval(currentTimer, 1000)
+  // }
+
+  // startTimer()
+
   return (
     <ApexChartWrapper>
-      <Grid container spacing={6}>
-        <Grid item xs={12} md={12} lg={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={12} lg={8} >
           <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 기기 현황</Box>
-          <Grid container spacing={6}>
-            <Grid item xs={6} md={4} lg={2}>
-              <Card sx={{ p: 3 }}>
-                <Box>총 등록 기기</Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', height: '100px', justifyContent: 'center' }}>
-                  <Icon icon='mdi-power-settings' width={20} />
-                  <Box sx={{ fontSize: '20px', pl: 2 }}> 11대</Box>
+          <Grid container spacing={2}>
+            <Grid item xs={6} md={2} lg={2.5}>
+              <Card sx={{ p: 3, height: '150px', display: 'relative' }}>
+                <Box >총 등록 기기</Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '50px', justifyContent: 'center', mt: 5 }}>
+                  <Icon icon='mdi-power-settings' color='rgb(66, 133, 244)' width={30} />
+                  <Box sx={{ fontSize: '20px', pl: 2 }}> 13대</Box>
                 </Box>
               </Card>
             </Grid>
-            <Grid item xs={6} md={4} lg={2}>
-              <Card sx={{ p: 3 }}>
+            <Grid item xs={6} md={2} lg={2.5}>
+              <Card sx={{ p: 3, height: '150px' }}>
                 <Box>사용 중</Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', height: '100px', justifyContent: 'center' }}>
-                  <Icon icon='mdi:pencil' width={20} />
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '50px', justifyContent: 'center', mt: 5 }}>
+                  <Icon icon='mdi-power-settings' color="rgb(52, 168, 83)" width={30} />
                   <Box sx={{ fontSize: '20px', pl: 2 }}> 11대</Box>
                 </Box>
               </Card>
             </Grid>
-            <Grid item xs={6} md={4} lg={2}>
-              <Card sx={{ p: 3 }}>
-                <Box>이상 기기</Box>{' '}
-                <Box sx={{ display: 'flex', alignItems: 'center', height: '100px', justifyContent: 'center' }}>
-                  <Icon icon='mdi:pencil' width={20} />
-                  <Box sx={{ fontSize: '20px', pl: 2 }}> 11대</Box>
+            <Grid item xs={6} md={2} lg={2.5}>
+              <Card sx={{ p: 3, height: '150px' }}>
+                <Box>이상 기기</Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '50px', justifyContent: 'center', mt: 5 }}>
+                  <Icon icon='mdi-power-settings' color='rgb(234, 67, 53)' width={30} />
+                  <Box sx={{ fontSize: '20px', pl: 2 }}> 2대</Box>
                 </Box>
               </Card>
             </Grid>
-            <Grid item xs={6} md={4} lg={2}>
-              <Card sx={{ p: 3 }}>
-                <Box>업데이트 예정</Box>
+            <Grid item xs={6} md={2} lg={2}>
+              <Card sx={{ p: 3, height: '150px' }}>
+                <Box >업데이트 예정</Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '50px', justifyContent: 'center', mt: 5 }}>
+                  <Icon icon='mdi-cellphone-android' color='rgb(180, 180, 180)' width={30} />
+                  <Box sx={{ fontSize: '20px', pl: 2 }}> 2대</Box>
+                </Box>
               </Card>
             </Grid>
-            <Grid item xs={6} md={4} lg={2}>
-              <Card sx={{ p: 3 }}>
+            <Grid item xs={6} md={2} lg={2}>
+              <Card sx={{ p: 3, height: '150px' }}>
                 <Box>배터리 부족</Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', height: '50px', justifyContent: 'center', mt: 5 }}>
+                  <Icon icon='mdi-battery-low' color='rgb(251, 188, 5)' width={30} />
+                  <Box sx={{ fontSize: '20px', pl: 2 }}> 2대</Box>
+                </Box>
               </Card>
             </Grid>
           </Grid>
         </Grid>
 
-        {/* 두번째줄 */}
+        <Grid item xs={6} md={2} lg={2} pr={5} >
+          <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 현재 시각</Box>
+          <Card sx={{ p: 3, height: '150px' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', height: '130px', justifyContent: 'center' }}>
+              <Icon icon='mdi-clock' color='grey' width={30} />
+              {/* <Box sx={{ fontSize: '20px', pl: 2 }}>{timer}</Box> */}
+            </Box>
+          </Card>
+        </Grid>
+
+        <Grid item xs={6} md={2} lg={2} pl={5}>
+          <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 업데이트 시각</Box>
+          <Card sx={{ p: 3, height: '150px' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', height: '130px', justifyContent: 'center' }}>
+              <Icon icon='mdi-clock' color='rgb(52, 168, 83)' width={30} />
+              {/* <Box sx={{ fontSize: '20px', pl: 2 }}>{updateTimer}</Box> */}
+            </Box>
+          </Card>
+        </Grid>
+
+      </Grid >
+
+
+
+      {/* 두번째줄 */}
+      <Grid container spacing={6} mt={3}>
         <Grid item xs={12} md={6} lg={6}>
           <Grid sx={{ py: 5 }}>
             <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 실시간 현황</Box>
-            <RealTime />
+            <RealTime realtimeData={realtimeData} />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
@@ -197,7 +254,7 @@ const AnalyticsDashboard = () => {
         </Grid>
 
         {/* 세번째줄 */}
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <ChatBoard
             chat={chat}
             username={username}
@@ -207,9 +264,9 @@ const AnalyticsDashboard = () => {
             connected={connected}
             submitSendMessage={submitSendMessage}
           />
-        </Grid>
-      </Grid>
-    </ApexChartWrapper>
+        </Grid> */}
+      </Grid >
+    </ApexChartWrapper >
   )
 }
 

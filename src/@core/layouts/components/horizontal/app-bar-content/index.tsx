@@ -40,7 +40,7 @@ const AppBarContent = (props: Props) => {
         userAppBarBranding(props)
       ) : (
         <LinkStyled href='/'>
-          <svg
+          {/* <svg
             width={30}
             height={25}
             version='1.1'
@@ -109,7 +109,8 @@ const AppBarContent = (props: Props) => {
             }}
           >
             {themeConfig.templateName}
-          </Typography>
+          </Typography> */}
+          <img src='/images/intsainLogoLong.gif' width='150px' alt='로고' style={{ marginLeft: '5px' }}></img>
         </LinkStyled>
       )}
       {userAppBarContent ? userAppBarContent(props) : null}
