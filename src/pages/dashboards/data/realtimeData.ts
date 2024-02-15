@@ -1,17 +1,3 @@
-interface TableBodyRowType {
-  id: string
-  type: string
-  data: dataProps[]
-}
-
-interface dataProps {
-  id: string
-  group: string
-  location: string
-  SN: string
-  dataUsage: string
-}
-
 export const realTimeData = [
   {
     id: '1',

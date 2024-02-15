@@ -24,6 +24,7 @@ import AnalyticsTransactionsCard from 'src/views/dashboards/analytics/AnalyticsT
 
 // import SocketIOClient from 'socket.io-client'
 import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import axios from 'axios'
 
 import { io, Socket } from 'socket.io-client'
@@ -35,6 +36,7 @@ import DataUsageTable from './dataUsageTable'
 import { dataUsageRows } from '../data/dataUsageData'
 import RealTime from './realtime'
 import { realTimeData } from '../data/realtimeData'
+
 
 interface ServerToClientEvents {
   // noArg: () => void
@@ -68,52 +70,68 @@ const AnalyticsDashboard = () => {
   const [socketConnectFlag, setSocketConnectFlag] = useState<boolean>(true)
   // let socketConnectFlag = true
   // const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
+  const router = useRouter()
 
-  // useEffect((): any => {
-  //   // log socket connection
-  //   if (socketConnectFlag) {
-  //     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.97:5000')
+  useEffect((): any => {
+    // log socket connection
+    if (socketConnectFlag) {
+      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.97:5000')
 
-  //     socket.on('connect', () => {
-  //       console.log('SOCKET CONNECTED!', socket.id)
-  //       //socket.emit('userId', socket.id)
+      socket.on('connect', () => {
+        console.log('SOCKET CONNECTED!', socket.id)
+        //socket.emit('userId', socket.id)
 
-  //       // 접속이후에 접근불가
-  //       setSocketConnectFlag(false)
-  //       // socketConnectFlag = false
-  //       setConnected(true)
-  //     })
+        // 접속이후에 접근불가
+        setSocketConnectFlag(false)
+        // socketConnectFlag = false
+        setConnected(true)
+      })
 
-  //     // 서버로부터 데이터 들어오면
-  //     socket.on('message', message => {
-  //       chat.push(message)
-  //       setChat([...chat])
-  //       // console.log(message)
-  //     })
+      // 서버로부터 데이터 들어오면
+      // socket.on('message', message => {
+      //   chat.push(message)
+      //   setChat([...chat])
+      //   // console.log(message)
+      // })
 
-  //     socket.on('warning', warning => {
-  //       setWarningRow(warning)
-  //       console.log(warning)
-  //     })
+      socket.on('warning', warning => {
+        setWarningRow(warning)
+        console.log(warning)
+      })
 
-  //     // socket.on('dataUsage', dataUsage => {
-  //     //   setDataUsageRow(dataUsage)
-  //     //   console.log(dataUsage)
-  //     // })
+      // socket.on('dataUsage', dataUsage => {
+      //   setDataUsageRow(dataUsage)
+      //   console.log(dataUsage)
+      // })
 
-  //     // socket.on('realtime', realtime => {
-  //     //   setRealtimeData(realtime)
-  //     //   console.log(realtime)
-  //     // })
-  //   }
+      // socket.on('realtime', realtime => {
+      //   setRealtimeData(realtime)
+      //   console.log(realtime)
+      // })
 
-  //   // if (socket) return () => socket.disconnect()
-  //   // if (socketConnectFlag === false) socket.disconnect()
-  // }, [chat, socketConnectFlag])
+      // if (socket) return () => socket.disconnect()
 
-  // const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSendMessage(event.target.value)
-  // }, [])
+      router.events.on('routeChangeStart', () => socket.close())
+
+    }
+
+
+
+    // if (socket) return () => socket.disconnect()
+    // if (socketConnectFlag === false) socket.disconnect()
+  }, [chat, socketConnectFlag])
+
+
+  const disconnectSocket = () => {
+    console.log(router.asPath.split('?')[0])
+    if (router.asPath.split('?')[0] !== '/dashboards/analytics/') io('http://192.168.50.97:5000').disconnect()
+
+  }
+
+
+  const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSendMessage(event.target.value)
+  }, [])
 
   const enterKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {

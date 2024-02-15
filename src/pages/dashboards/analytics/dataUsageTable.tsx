@@ -147,7 +147,7 @@ const DataUsageTable = ({ dataUsageRows }) => {
   const handleAlignment = (event: MouseEvent<HTMLElement>, newAlignment: string | null) => {
     setAlignment(newAlignment)
   }
-   console.log(dataUsageRows)
+  console.log(dataUsageRows)
 
   const [row, setRow] = useState([])
 
@@ -160,7 +160,7 @@ const DataUsageTable = ({ dataUsageRows }) => {
 
   return (
     <>
-      <Card>
+      <Card sx={{ maxHeight: '350px', overflowY: 'auto' }}>
         <Box sx={{ m: 0, width: '100%' }}>
           <ToggleButtonGroup
             exclusive

@@ -240,7 +240,7 @@ const columns: GridColDef[] = [
 
 const WarningTable = ({ warningRows }) => {
   return (
-    <Card>
+    <Card sx={{ maxHeight: '350px', overflowY: 'auto' }}>
       <DataGrid
         autoHeight
         hideFooter

@@ -8,6 +8,7 @@ import { Box, Button, Card, CardContent, CardHeader, Grid, TextField } from '@mu
 import SearchAddress from './SearchAddress'
 import 'tailwindcss/tailwind.css'
 
+
 interface Device {
   address: string
   product_serial_number: string
