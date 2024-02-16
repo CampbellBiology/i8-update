@@ -125,13 +125,9 @@ const AnalyticsDashboard = () => {
 
     }
 
-
-
     // if (socket) return () => socket.disconnect()
     // if (socketConnectFlag === false) socket.disconnect()
   }, [chat, socketConnectFlag])
-
-
 
 
   useEffect(() => {
@@ -187,22 +183,22 @@ const AnalyticsDashboard = () => {
     }
   }
 
-  // const [timer, setTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`);
-  // const [updateTimer, setUpdateTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`)
+  const [timer, setTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`);
+  const [updateTimer, setUpdateTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`)
 
-  // const currentTimer = () => {
-  //   const date = new Date();
-  //   const hours = String(date.getHours()).padStart(2, "0");
-  //   const minutes = String(date.getMinutes()).padStart(2, "0");
-  //   const seconds = String(date.getSeconds()).padStart(2, "0");
-  //   setTimer(`${hours}:${minutes}:${seconds}`)
-  // }
+  const currentTimer = () => {
+    const date = new Date();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    setTimer(`${hours}:${minutes}:${seconds}`)
+  }
 
-  // const startTimer = () => {
-  //   setInterval(currentTimer, 1000)
-  // }
+  const startTimer = () => {
+    setInterval(currentTimer, 1000)
+  }
 
-  // startTimer()
+  startTimer()
 
   return (
     <ApexChartWrapper>
@@ -263,7 +259,7 @@ const AnalyticsDashboard = () => {
           <Card sx={{ p: 3, height: '150px' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', height: '130px', justifyContent: 'center' }}>
               <Icon icon='mdi-clock' color='grey' width={30} />
-              {/* <Box sx={{ fontSize: '20px', pl: 2 }}>{timer}</Box> */}
+              <Box sx={{ fontSize: '20px', pl: 2 }}>{timer}</Box>
             </Box>
           </Card>
         </Grid>
