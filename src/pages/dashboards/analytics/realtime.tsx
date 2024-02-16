@@ -10,38 +10,15 @@ import { realTimeDeviceData, realTimeFrameData, realTimeImageData } from "../dat
 import { Device } from "src/pages/location/interface/Device"
 import { useFormState } from "react-hook-form"
 
-const RealTime = ({ realtimeData, realtimeImageData }) => {
+const RealTime = ({ deviceFrame, deviceData }) => {
 
-  const [deviceFrame, setDeviceFrame] = useState(realTimeFrameData)
-  const [deviceData, setDeviceData] = useState(realTimeDeviceData)
-
-  useEffect(() => {
-    axios
-      .get('/api/deviceFrame', {
-        withCredentials: true
-      })
-      .then(response => {
-        const res = response.data
-        if (res.status === 'success') {
-          setDeviceFrame(res.data)
-          // console.log(res.data)
-        } else {
-          console.log('fail')
-        }
-      })
-  }, [])
-
-
-  console.log(deviceFrame)
-
-  console.log(realtimeData)
 
   return (
     <Card sx={{ p: 5, minHeight: '395px', height: '630px', overflowY: 'auto' }}>
-      {deviceFrame.map(el => {
+      {deviceFrame.map((el, index) => {
 
         return (
-          <Box key={el.id} id='repeat' mb={'50px'}>
+          <Box key={index} id='repeat' mb={'50px'}>
             <Box sx={{ fontSize: '15px', pb: 1 }}><b>설치 주소 : </b>{`${el.address}`}</Box>
             <Box sx={{ fontSize: '15px', pb: 3 }}><b>설치 장소 : </b>{`${el.group} >> ${el.location}`}</Box>
             <Grid sx={{ p: 2, border: '1px solid lightgrey', borderRadius: '10px' }} container>
@@ -64,11 +41,12 @@ const RealTime = ({ realtimeData, realtimeImageData }) => {
               <Grid sx={{ borer: '1px solid black', p: 2 }} item xs={12} md={12} lg={7} >
                 <Box sx={{ fontSize: '14px' }}><b>온습도 정보</b></Box>
                 <Grid container spacing={0}>
-                  <Grid container xs={12} md={12} lg={12} >
+                  {/* <Grid container xs={12} md={12} lg={12} > */}
+                  <Grid container>
 
-                    {deviceData.find(device => device.address === el.address).data.map(item => {
+                    {deviceData.find(device => device.address === el.address && device.group === el.group && device.location === el.location)?.data.map((item, index) => {
                       return (
-                        <Grid key={item.product_serial_number} item xs={6} md={6} lg={6} >
+                        <Grid key={`${item.product_serial_number}_${index}`} item xs={6} md={6} lg={6} >
                           <Box sx={{ p: '15px', mt: 3, border: '1px solid lightgrey', borderRadius: '15px', mr: 2, minWidth: '100px' }}>
                             <Box sx={{ fontSize: '14px', alignItems: "center", display: 'flex', ml: 1 }}>
                               <Icon fontSize={'20px'} icon='mdi-cellphone' />

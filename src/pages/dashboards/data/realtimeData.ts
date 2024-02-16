@@ -80,14 +80,14 @@ export const realTimeData = [
 export const realTimeFrameData = [
   {
     id: '1',
-    address: '부산진구 엄광로 178',
+    address: '부산시 부산진구 엄광로 176',
     group: '불러오는 중...',
     location: '불러오는 중...',
     imagePath: '/images/loading.png'
   },
   {
     id: '2',
-    address: '서울시 구로구 인트세인',
+    address: '부산시 중앙대로',
     group: '불러오는 중...',
     location: '불러오는 중...',
     imagePath: '/images/loading.png'
@@ -97,7 +97,9 @@ export const realTimeFrameData = [
 export const realTimeDeviceData = [
   {
     id: '1',
-    address: '부산진구 엄광로 178',
+    address: '부산시 부산진구 엄광로 176',
+    group: '동의대 산학협력관',
+    location: '802-2',
     data: [
       {
         product_serial_number: 'mmWave-555',
@@ -114,6 +116,8 @@ export const realTimeDeviceData = [
   {
     id: '2',
     address: '서울시 구로구 인트세인',
+    group: '동의대 산학협력관',
+    location: '802-2',
     data: [
       {
         product_serial_number: 'mmWave-77',

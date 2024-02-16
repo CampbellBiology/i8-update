@@ -35,7 +35,7 @@ import WarningTable from './warningTable'
 import DataUsageTable from './dataUsageTable'
 import { dataUsageRows } from '../data/dataUsageData'
 import RealTime from './realtime'
-import { realTimeData, realTimeImageData } from '../data/realtimeData'
+import { realTimeData, realTimeDeviceData, realTimeFrameData, realTimeImageData } from '../data/realtimeData'
 
 
 interface ServerToClientEvents {
@@ -63,8 +63,12 @@ const AnalyticsDashboard = () => {
   const [connected, setConnected] = useState<boolean>(false)
   const [warningRow, setWarningRow] = useState(warningRows)
   const [dataUsageRow, setDataUsageRow] = useState(dataUsageRows)
-  const [realtimeData, setRealTimeData] = useState(realTimeData)
-  const [realtimeImageData, setRealTimeImageData] = useState(realTimeImageData)
+
+  const [deviceFrame, setDeviceFrame] = useState(realTimeFrameData)
+  const [deviceData, setDeviceData] = useState(realTimeDeviceData)
+
+  // const [realtimeData, setRealTimeData] = useState(realTimeData)
+  // const [realtimeImageData, setRealTimeImageData] = useState(realTimeImageData)
 
   // const username = useSelector(state => state.user.name)
   const username = 'hyunha'
@@ -111,7 +115,7 @@ const AnalyticsDashboard = () => {
       // })
 
       socket.on('realtime', realtime => {
-        setRealTimeData(realtime)
+        setDeviceData(realtime)
         console.log(realtime)
       })
 
@@ -127,6 +131,27 @@ const AnalyticsDashboard = () => {
     // if (socketConnectFlag === false) socket.disconnect()
   }, [chat, socketConnectFlag])
 
+
+
+
+  useEffect(() => {
+    axios
+      .get('http://192.168.50.97:3004/api/deviceFrame', {
+        withCredentials: true
+      })
+      .then(response => {
+        const res = response.data
+        if (res.status === 'success') {
+          setDeviceFrame(res.data)
+          // console.log(res.data)
+        } else {
+          console.log('fail')
+        }
+      })
+  }, [])
+
+
+  console.log(deviceFrame)
 
   const disconnectSocket = () => {
     console.log(router.asPath.split('?')[0])
@@ -262,7 +287,7 @@ const AnalyticsDashboard = () => {
         <Grid item xs={12} md={6} lg={6}>
           <Grid sx={{ py: 5 }}>
             <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 실시간 현황</Box>
-            <RealTime realtimeData={realtimeData} realtimeImageData={realtimeImageData} />
+            <RealTime deviceFrame={deviceFrame} deviceData={deviceData} />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
