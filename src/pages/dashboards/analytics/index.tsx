@@ -35,7 +35,7 @@ import WarningTable from './warningTable'
 import DataUsageTable from './dataUsageTable'
 import { dataUsageRows } from '../data/dataUsageData'
 import RealTime from './realtime'
-import { realTimeData } from '../data/realtimeData'
+import { realTimeData, realTimeImageData } from '../data/realtimeData'
 
 
 interface ServerToClientEvents {
@@ -64,6 +64,7 @@ const AnalyticsDashboard = () => {
   const [warningRow, setWarningRow] = useState(warningRows)
   const [dataUsageRow, setDataUsageRow] = useState(dataUsageRows)
   const [realtimeData, setRealTimeData] = useState(realTimeData)
+  const [realtimeImageData, setRealTimeImageData] = useState(realTimeImageData)
 
   // const username = useSelector(state => state.user.name)
   const username = 'hyunha'
@@ -104,10 +105,15 @@ const AnalyticsDashboard = () => {
       //   console.log(dataUsage)
       // })
 
-      // socket.on('realtime', realtime => {
-      //   setRealtimeData(realtime)
-      //   console.log(realtime)
+      // socket.on('realtimeImage', realtimeImage => {
+      //   setRealTimeImageData(realtimeImage)
+      //   console.log(realtimeImage)
       // })
+
+      socket.on('realtime', realtime => {
+        setRealTimeData(realtime)
+        console.log(realtime)
+      })
 
       // if (socket) return () => socket.disconnect()
 
@@ -256,7 +262,7 @@ const AnalyticsDashboard = () => {
         <Grid item xs={12} md={6} lg={6}>
           <Grid sx={{ py: 5 }}>
             <Box sx={{ pb: 3, fontSize: 'large', fontWeight: '600' }}> 실시간 현황</Box>
-            <RealTime realtimeData={realtimeData} />
+            <RealTime realtimeData={realtimeData} realtimeImageData={realtimeImageData} />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
