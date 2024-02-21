@@ -4,26 +4,12 @@ import Grid from '@mui/material/Grid'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Custom Components Imports
-import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical'
-
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
-// ** Demo Components Imports
-import AnalyticsTable from 'src/views/dashboards/analytics/AnalyticsTable'
-import AnalyticsTrophy from 'src/views/dashboards/analytics/AnalyticsTrophy'
-import AnalyticsSessions from 'src/views/dashboards/analytics/AnalyticsSessions'
-import AnalyticsTotalProfit from 'src/views/dashboards/analytics/AnalyticsTotalProfit'
-import AnalyticsPerformance from 'src/views/dashboards/analytics/AnalyticsPerformance'
-import AnalyticsTotalEarning from 'src/views/dashboards/analytics/AnalyticsTotalEarning'
-import AnalyticsWeeklyOverview from 'src/views/dashboards/analytics/AnalyticsWeeklyOverview'
-import AnalyticsDepositWithdraw from 'src/views/dashboards/analytics/AnalyticsDepositWithdraw'
-import AnalyticsSalesByCountries from 'src/views/dashboards/analytics/AnalyticsSalesByCountries'
-import AnalyticsTransactionsCard from 'src/views/dashboards/analytics/AnalyticsTransactionsCard'
 
 // import SocketIOClient from 'socket.io-client'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 
@@ -35,7 +21,7 @@ import WarningTable from './warningTable'
 import DataUsageTable from './dataUsageTable'
 import { dataUsageRows } from '../data/dataUsageData'
 import RealTime from './realtime'
-import { realTimeData, realTimeDeviceData, realTimeFrameData, realTimeImageData } from '../data/realtimeData'
+import { realTimeData, realTimeDeviceData, realTimeFrameData } from '../data/realtimeData'
 
 
 interface ServerToClientEvents {
@@ -67,20 +53,15 @@ const AnalyticsDashboard = () => {
   const [deviceFrame, setDeviceFrame] = useState(realTimeFrameData)
   const [deviceData, setDeviceData] = useState(realTimeDeviceData)
 
-  // const [realtimeData, setRealTimeData] = useState(realTimeData)
-  // const [realtimeImageData, setRealTimeImageData] = useState(realTimeImageData)
 
-  // const username = useSelector(state => state.user.name)
-  const username = 'hyunha'
   const [socketConnectFlag, setSocketConnectFlag] = useState<boolean>(true)
-  // let socketConnectFlag = true
-  // const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
+
   const router = useRouter()
 
   useEffect((): any => {
     // log socket connection
     if (socketConnectFlag) {
-      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.97:5000')
+      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://127.0.0.1:5000')
 
       socket.on('connect', () => {
         console.log('SOCKET CONNECTED!', socket.id)
@@ -92,13 +73,6 @@ const AnalyticsDashboard = () => {
         setConnected(true)
       })
 
-      // 서버로부터 데이터 들어오면
-      // socket.on('message', message => {
-      //   chat.push(message)
-      //   setChat([...chat])
-      //   // console.log(message)
-      // })
-
       socket.on('warning', warning => {
         setWarningRow(warning)
         console.log(warning)
@@ -109,37 +83,28 @@ const AnalyticsDashboard = () => {
         console.log(dataUsage)
       })
 
-      // socket.on('realtimeImage', realtimeImage => {
-      //   setRealTimeImageData(realtimeImage)
-      //   console.log(realtimeImage)
-      // })
 
       socket.on('realtime', realtime => {
         setDeviceData(realtime)
         console.log(realtime)
       })
 
-      // if (socket) return () => socket.disconnect()
-
       router.events.on('routeChangeStart', () => socket.close())
 
     }
-
-    // if (socket) return () => socket.disconnect()
-    // if (socketConnectFlag === false) socket.disconnect()
   }, [chat, socketConnectFlag])
 
 
   useEffect(() => {
     axios
-      .get('http://192.168.50.97:3004/api/deviceFrame', {
+      .get('/api/deviceFrame', {
         withCredentials: true
       })
       .then(response => {
         const res = response.data
         if (res.status === 'success') {
           setDeviceFrame(res.data)
-          // console.log(res.data)
+          console.log(res.data)
         } else {
           console.log('fail')
         }
@@ -149,39 +114,6 @@ const AnalyticsDashboard = () => {
 
   console.log(deviceFrame)
 
-  const disconnectSocket = () => {
-    console.log(router.asPath.split('?')[0])
-    if (router.asPath.split('?')[0] !== '/dashboards/analytics/') io('http://192.168.50.97:5000').disconnect()
-
-  }
-
-
-  const sendMessageHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSendMessage(event.target.value)
-  }, [])
-
-  const enterKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      // send message
-      event.preventDefault()
-      submitSendMessage(event)
-    }
-  }
-
-  const submitSendMessage = async (event: React.FormEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    if (sendMessage) {
-      const message: IMessage = {
-        user: username,
-        message: sendMessage
-      }
-      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('http://192.168.50.231:5555')
-      socket.emit('message', message)
-
-      // const response = await axios.post('/api/chat', message)
-      setSendMessage('')
-    }
-  }
 
   const [timer, setTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`);
   const [updateTimer, setUpdateTimer] = useState(`${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`)
@@ -298,18 +230,6 @@ const AnalyticsDashboard = () => {
           </Grid>
         </Grid>
 
-        {/* 세번째줄 */}
-        {/* <Grid item xs={12} md={4}>
-          <ChatBoard
-            chat={chat}
-            username={username}
-            sendMessage={sendMessage}
-            sendMessageHandler={sendMessageHandler}
-            enterKeyPress={enterKeyPress}
-            connected={connected}
-            submitSendMessage={submitSendMessage}
-          />
-        </Grid> */}
       </Grid >
     </ApexChartWrapper >
   )
