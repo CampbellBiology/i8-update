@@ -104,10 +104,10 @@ const AnalyticsDashboard = () => {
         console.log(warning)
       })
 
-      // socket.on('dataUsage', dataUsage => {
-      //   setDataUsageRow(dataUsage)
-      //   console.log(dataUsage)
-      // })
+      socket.on('dataUsage', dataUsage => {
+        setDataUsageRow(dataUsage)
+        console.log(dataUsage)
+      })
 
       // socket.on('realtimeImage', realtimeImage => {
       //   setRealTimeImageData(realtimeImage)

@@ -19,8 +19,8 @@ const RealTime = ({ deviceFrame, deviceData }) => {
 
         return (
           <Box key={index} id='repeat' mb={'50px'}>
-            <Box sx={{ fontSize: '15px', pb: 1 }}><b>설치 주소 : </b>{`${el.address}`}</Box>
-            <Box sx={{ fontSize: '15px', pb: 3 }}><b>설치 장소 : </b>{`${el.group} >> ${el.location}`}</Box>
+            <Box sx={{ fontSize: '15px', pb: 1, display: 'flex', alignItems: 'center', pb: 2 }}><Icon fontSize={'20px'} icon='mdi-home' color="rgb(145, 85, 253)" /><Box style={{ paddingLeft: '3px', fontWeight: '600' }}>설치 주소 </Box>{`: ${el.address}`}</Box>
+            <Box sx={{ fontSize: '15px', pb: 3, display: 'flex', alignItems: 'center' }}><Icon fontSize={'20px'} icon='mdi-location' color="rgb(180, 180, 180)" /><Box style={{ paddingLeft: '3px', fontWeight: '600' }}>설치 장소 </Box>{`: ${el.group} >> ${el.location}`}</Box>
             <Grid sx={{ p: 2, border: '1px solid lightgrey', borderRadius: '10px' }} container>
               <Grid sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }} item xs={12} md={12} lg={5} >
                 <Box sx={{ maxWidth: '300px' }}>

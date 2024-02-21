@@ -147,7 +147,7 @@ const DataUsageTable = ({ dataUsageRows }) => {
   const handleAlignment = (event: MouseEvent<HTMLElement>, newAlignment: string | null) => {
     setAlignment(newAlignment)
   }
-  console.log(dataUsageRows)
+  // console.log(dataUsageRows)
 
   const [row, setRow] = useState([])
 
@@ -156,7 +156,7 @@ const DataUsageTable = ({ dataUsageRows }) => {
     setRow(filteredRows[0].data)
   }, [dataUsageRows, alignment])
 
-  console.log(row)
+  // console.log(row)
 
   return (
     <>
